@@ -1,0 +1,34 @@
+[tasks.ollama-up]
+description = "Starts the ollama container at http://localhost:11434/"
+dir = "{{cwd}}/docker"
+run = 'docker compose up -d'
+
+[tasks.ollama-down]
+description = "Stop Ollama container"
+dir = "{{cwd}}/docker"
+run = "docker compose down"
+
+[tasks.ollama-help]
+description = "Print the ollama help command to the terminal"
+dir = "{{cwd}}/docker"
+run = "docker exec ollama ollama --help"
+
+[tasks.ollama-pull]
+description = "Pull a model (usage: mise run pull-model -- llama2)"
+dir = "{{cwd}}/docker"
+run = "docker exec ollama ollama pull {{args}}"
+
+[tasks.ollama-status]
+description = "Check Ollama status"
+dir = "{{cwd}}/docker"
+run = "docker ps"
+
+[tasks.ollama-inspect]
+description = "Inspect locally pulled models"
+dir = "{{cwd}}/docker"
+run = "docker exec ollama ollama list"
+
+[tasks.ollama-bash]
+description = "Open bash in the running Ollama container (if available)"
+dir = "docker"
+run = "docker exec -it ollama /bin/bash"

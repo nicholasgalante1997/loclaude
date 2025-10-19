@@ -1,0 +1,73 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    # Use nvidia runtime for GPU acceleration
+    # This enables access to Nvidia GPUs from within the container
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all # Make all GPUs visible to the container
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility # Grant compute and utility capabilities (needed for GPU inference)
+      # OPTIONAL: Set memory limits for Ollama process (in bytes)
+      # Uncomment if you want to prevent Ollama from consuming unlimited RAM
+      # - OLLAMA_MAX_LOADED_MODELS=1
+      # - OLLAMA_NUM_PARALLEL=1
+      
+      # OPTIONAL: Set log level for debugging
+      # - OLLAMA_DEBUG=1
+    
+    # Volume mounts: maps host directories/files into the container
+    volumes:
+      # Map the models directory so they persist on your host
+      # Models downloaded in container go to /root/.ollama, we mount it to ./models on host
+      - ./models:/root/.ollama
+      
+      # Keep container time in sync with host (good practice)
+      # - /etc/localtime:/etc/localtime:ro
+      
+      # OPTIONAL: Mount a custom config directory
+      # Uncomment if you want to customize Ollama settings
+      # - ./config:/root/.ollama/config
+
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 300s
+      timeout: 2s
+      retries: 3
+      start_period: 40s
+    
+    # OPTIONAL: Resource limits and reservations
+    # Uncomment to constrain CPU and memory usage
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '4'           # Limit to 4 CPU cores
+    #       memory: 32G         # Limit to 32GB RAM
+    #     reservations:
+    #       cpus: '2'           # Reserve at least 2 CPU cores
+    #       memory: 16G         # Reserve at least 16GB RAM
+    #       devices:
+    #         - driver: nvidia
+    #           count: all      # Use all available GPUs
+    #           capabilities: [gpu]
+    
+    # OPTIONAL: Logging configuration
+    # Uncomment to control how much logging Docker stores
+    # logging:
+    #   driver: "json-file"
+    #   options:
+    #     max-size: "10m"       # Max size of each log file
+    #     max-file: "3"         # Keep max 3 log files
+    
+    # OPTIONAL: User and permissions
+    # Uncomment if you want to run as a specific user instead of root
+    # user: "1000:1000"
+
+# OPTIONAL: Named volumes for easier management
+# Uncomment if you want Docker to manage the models volume instead of host path
+# volumes:
+#   ollama_models:
+#     driver: local
