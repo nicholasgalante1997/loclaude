@@ -1,5 +1,23 @@
-.vscode
-./docker/models
+# IDE
+.vscode/
+.idea/
+
+# Docker volumes and model data
+docker/models/
+
+# SSH keys (should never be committed)
 id_ed25519
 id_ed25519.pub
-logs
+*.pem
+*.key
+
+# Logs
+logs/
+*.log
+
+# Auto-generated files
+.github/instructions/snyk_rules.instructions.md
+
+# OS files
+.DS_Store
+Thumbs.db

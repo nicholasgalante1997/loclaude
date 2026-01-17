@@ -34,8 +34,8 @@ docker run --rm --gpus all nvidia/cuda nvidia-smi
 2. Using `NVIDIA_VISIBLE_DEVICES` and specify the nvidia runtime
 
 ```bash
-docker run --rm --gpudocker run --rm --runtime=nvidia \
-    -e NVIDIA_VISIBLE_DEVICES=all nvidia/cuda nvidia-smis all nvidia/cuda nvidia-smi
+docker run --rm --runtime=nvidia \
+    -e NVIDIA_VISIBLE_DEVICES=all nvidia/cuda nvidia-smi
 ```
 
 3. Starting a GPU enabled container on specific GPUs
@@ -130,45 +130,93 @@ ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
 ```
 
 These environment variables are already set in the NVIDIA provided CUDA images.
-| Constraint | Description |
-|------------|-------------|
-| cuda       | constraint on the CUDA driver version. |
-| driver     | constraint on the driver version. |
-| arch       | constraint on the compute architectures of the selected GPUs. |
-| brand      | constraint on the brand of the selected GPUs (e.g. GeForce, Tesla, GRID). |
-
-constraint on the brand of the selected GPUs (e.g. GeForce, Tesla, GRID).
-
-Multiple constraints can be expressed in a single environment variable: space-separated constraints are ORed, comma-separated constraints are ANDed. Multiple environment variables of the form NVIDIA_REQUIRE_* are ANDed together.
-
-For example, the following constraints can be specified to the container image for constraining the supported CUDA and driver versions:
-
-NVIDIA_REQUIRE_CUDA "cuda>=11.0 driver>=450"
-
-NVIDIA_DISABLE_REQUIRE Environment Variable
-
-Single switch to disable all the constraints of the form NVIDIA_REQUIRE_*.
-
-Note
-
-If you are running CUDA-base images older than CUDA 11.7 (and unable to update to the new base images with updated constraints), CUDA compatibility checks can be disabled by setting NVIDIA_DISABLE_REQUIRE to true.
-NVIDIA_REQUIRE_CUDA Constraint
-
-The version of the CUDA toolkit used by the container. It is an instance of the generic NVIDIA_REQUIRE_* case and it is set by official CUDA images. If the version of the NVIDIA driver is insufficient to run this version of CUDA, the container will not be started. This variable can be specified in the form major.minor
-
-The possible values for this variable: cuda>=7.5, cuda>=8.0, cuda>=9.0 and so on.
-Dockerfiles
-
-Capabilities and GPU enumeration can be set in images via environment variables. If the environment variables are set inside the Dockerfile, you don’t need to set them on the docker run command-line.
-
-For instance, if you are creating your own custom CUDA container, you should use the following:
-
-ENV NVIDIA_VISIBLE_DEVICES all
-ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
-
-These environment variables are already set in the NVIDIA provided CUDA images.
 
 ## Mise (mise-en-place)
 
 - [Mise Docs Home](https://mise.jdx.dev/)
 - [Mise / Tools](https://mise.jdx.dev/dev-tools/)
+
+## Open WebUI
+
+- [Open WebUI Home](https://docs.openwebui.com)
+- [Open WebUI GitHub](https://github.com/open-webui/open-webui)
+- [Open WebUI Getting Started](https://docs.openwebui.com/getting-started/quick-start/)
+  - Select [Docker, Docker-Compose]
+
+### Docker Compose Setup
+
+Using Docker Compose simplifies the management of multi-container Docker applications.
+
+If you don't have Docker installed, check out our Docker installation tutorial.
+
+Docker Compose requires an additional package, docker-compose-v2.
+
+Warning: Older Docker Compose tutorials may reference version 1 syntax, which uses commands like docker-compose build. Ensure you use version 2 syntax, which uses commands like docker compose build  
+
+```yml
+# Here is an example configuration file for setting up Open WebUI with Docker Compose:
+
+services:
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    ports:
+      - "3000:8080"
+    volumes:
+      - open-webui:/app/backend/data
+volumes:
+  open-webui:
+```
+
+Using Slim Images
+
+For environments with limited storage or bandwidth, you can use the slim image variant that excludes pre-bundled models:
+
+```yml
+services:
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main-slim
+    ports:
+      - "3000:8080"
+    volumes:
+      - open-webui:/app/backend/data
+volumes:
+  open-webui:
+```
+
+note
+
+Note: Slim images download required models (whisper, embedding models) on first use, which may result in longer initial startup times but significantly smaller image sizes.
+Starting the Services
+
+To start your services, run the following command:
+
+`docker compose up -d`
+
+Helper Script
+
+A helper script called `run-compose.sh` is available in the `scripts/` directory. This script assists in choosing which Docker Compose files to include in your deployment, streamlining the setup process. Note that this script is designed for multi-file Docker Compose setups and may require additional compose files (e.g., `docker-compose.gpu.yaml`, `docker-compose.api.yaml`) to function fully.
+
+
+> Note: For Nvidia GPU support, you change the image from ghcr.io/open-webui/open-webui:main to ghcr.io/open-webui/open-webui:cuda and add the following to your service definition in the docker-compose.yml file:
+
+```yml
+deploy:
+  resources:
+    reservations:
+      devices:
+        - driver: nvidia
+          count: all
+          capabilities: [gpu]
+```
+
+This setup ensures that your application can leverage GPU resources when available.
+Next Steps
+
+After installing, visit:
+
+    http://localhost:3000 to access Open WebUI.
+    or http://localhost:8080/ when using a Python deployment.
+
+You are now ready to start using Open WebUI!
+Using Open WebUI with Ollama
+If you're using Open WebUI with Ollama, be sure to check out our Starting with Ollama Guide to learn how to manage your Ollama instances with Open WebUI.

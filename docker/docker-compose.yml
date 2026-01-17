@@ -41,33 +41,45 @@ services:
     
     # OPTIONAL: Resource limits and reservations
     # Uncomment to constrain CPU and memory usage
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: '4'           # Limit to 4 CPU cores
-    #       memory: 32G         # Limit to 32GB RAM
-    #     reservations:
-    #       cpus: '2'           # Reserve at least 2 CPU cores
-    #       memory: 16G         # Reserve at least 16GB RAM
-    #       devices:
-    #         - driver: nvidia
-    #           count: all      # Use all available GPUs
-    #           capabilities: [gpu]
-    
-    # OPTIONAL: Logging configuration
-    # Uncomment to control how much logging Docker stores
-    # logging:
-    #   driver: "json-file"
-    #   options:
-    #     max-size: "10m"       # Max size of each log file
-    #     max-file: "3"         # Keep max 3 log files
-    
-    # OPTIONAL: User and permissions
-    # Uncomment if you want to run as a specific user instead of root
-    # user: "1000:1000"
+    deploy:
+      resources:
+        # limits:
+        #   cpus: '4'           # Limit to 4 CPU cores
+        #   memory: 32G         # Limit to 32GB RAM
+        reservations:
+          # cpus: '2'           # Reserve at least 2 CPU cores
+          # memory: 16G         # Reserve at least 16GB RAM
+          devices:
+            - driver: nvidia
+              count: all      # Use all available GPUs
+              capabilities: [gpu]
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:cuda # For Nvidia GPU support, you change the image from ghcr.io/open-webui/open-webui:main to ghcr.io/open-webui/open-webui:cuda
+    container_name: open-webui
+    ports:
+      - "3000:8080"
+    environment:
+      # Point Open WebUI to the Ollama service
+      # Use the service name (ollama) as the hostname since they're on the same Docker network
+      - OLLAMA_BASE_URL=http://ollama:11434
+    depends_on:
+      - ollama # Ensure Ollama starts before Open WebUI
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    volumes:
+      - open-webui:/app/backend/data
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
 
-# OPTIONAL: Named volumes for easier management
-# Uncomment if you want Docker to manage the models volume instead of host path
-# volumes:
-#   ollama_models:
-#     driver: local
+volumes:
+  open-webui:

@@ -1,34 +1,107 @@
-[tasks.ollama-up]
-description = "Starts the ollama container at http://localhost:11434/"
-dir = "{{cwd}}/docker"
-run = 'docker compose up -d'
+# Mise configuration for Ollama + Open WebUI Docker setup
+# Run `mise tasks` to see all available tasks
 
-[tasks.ollama-down]
-description = "Stop Ollama container"
+# =============================================================================
+# Ollama Tasks
+# =============================================================================
+
+[tasks.up]
+description = "Start both Ollama and Open WebUI containers"
+dir = "{{cwd}}/docker"
+run = "docker compose up -d"
+
+[tasks.down]
+description = "Stop all containers"
 dir = "{{cwd}}/docker"
 run = "docker compose down"
 
-[tasks.ollama-help]
-description = "Print the ollama help command to the terminal"
+[tasks.restart]
+description = "Restart all containers"
 dir = "{{cwd}}/docker"
-run = "docker exec ollama ollama --help"
+run = "docker compose restart"
 
-[tasks.ollama-pull]
-description = "Pull a model (usage: mise run pull-model -- llama2)"
-dir = "{{cwd}}/docker"
-run = "docker exec ollama ollama pull {{args}}"
+[tasks.status]
+description = "Show container status"
+run = "docker ps --filter 'name=ollama' --filter 'name=open-webui'"
 
-[tasks.ollama-status]
-description = "Check Ollama status"
+[tasks.logs]
+description = "Follow logs from all containers"
 dir = "{{cwd}}/docker"
-run = "docker ps"
+run = "docker compose logs -f"
 
-[tasks.ollama-inspect]
-description = "Inspect locally pulled models"
+[tasks."logs:ollama"]
+description = "Follow Ollama container logs"
 dir = "{{cwd}}/docker"
+run = "docker compose logs -f ollama"
+
+[tasks."logs:webui"]
+description = "Follow Open WebUI container logs"
+dir = "{{cwd}}/docker"
+run = "docker compose logs -f open-webui"
+
+# =============================================================================
+# Ollama Model Management
+# =============================================================================
+
+[tasks.pull]
+description = "Pull a model (usage: mise run pull <model-name>)"
+run = "docker exec ollama ollama pull {{arg(name='model')}}"
+
+[tasks.list]
+description = "List downloaded models"
 run = "docker exec ollama ollama list"
 
-[tasks.ollama-bash]
-description = "Open bash in the running Ollama container (if available)"
-dir = "docker"
+[tasks.rm]
+description = "Remove a model (usage: mise run rm <model-name>)"
+run = "docker exec ollama ollama rm {{arg(name='model')}}"
+
+[tasks.run]
+description = "Run a model interactively (usage: mise run run <model-name>)"
+run = "docker exec -it ollama ollama run {{arg(name='model')}}"
+
+[tasks.show]
+description = "Show model info (usage: mise run show <model-name>)"
+run = "docker exec ollama ollama show {{arg(name='model')}}"
+
+# =============================================================================
+# Shell Access
+# =============================================================================
+
+[tasks."shell:ollama"]
+description = "Open a shell in the Ollama container"
 run = "docker exec -it ollama /bin/bash"
+
+[tasks."shell:webui"]
+description = "Open a shell in the Open WebUI container"
+run = "docker exec -it open-webui /bin/bash"
+
+# =============================================================================
+# Health & Diagnostics
+# =============================================================================
+
+[tasks.health]
+description = "Check health status of all containers"
+run = """
+echo "=== Container Health ===" && \
+docker inspect --format='{{.Name}}: {{.State.Health.Status}}' ollama open-webui 2>/dev/null || \
+echo "Containers not running"
+"""
+
+[tasks.gpu]
+description = "Check GPU status inside Ollama container"
+run = "docker exec ollama nvidia-smi"
+
+[tasks.help]
+description = "Show Ollama CLI help"
+run = "docker exec ollama ollama --help"
+
+# =============================================================================
+# URLs (for reference)
+# =============================================================================
+
+[tasks.urls]
+description = "Display service URLs"
+run = """
+echo "Ollama API:    http://localhost:11434"
+echo "Open WebUI:    http://localhost:3000"
+"""
