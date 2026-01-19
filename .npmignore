@@ -25,6 +25,4 @@ Thumbs.db
 # Bun dependencies
 node_modules
 
-# Bundled files
-dist/
-*.tgz
+docker/models

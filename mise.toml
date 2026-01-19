@@ -1,6 +1,8 @@
 # Mise configuration for Ollama + Open WebUI Docker setup
 # Run `mise tasks` to see all available tasks
 
+[tasks]
+
 # =============================================================================
 # Ollama Tasks
 # =============================================================================
@@ -9,6 +11,16 @@
 description = "Start both Ollama and Open WebUI containers"
 dir = "{{cwd}}/docker"
 run = "docker compose up -d"
+
+[tasks."up:ollama"]
+description = "Start only the Ollama container"
+dir = "{{cwd}}/docker"
+run = "docker compose up -d ollama"
+
+[tasks."up:webui"]
+description = "Start only the Open WebUI container"
+dir = "{{cwd}}/docker"
+run = "docker compose up -d open-webui"
 
 [tasks.down]
 description = "Stop all containers"
@@ -83,7 +95,7 @@ run = "docker exec -it open-webui /bin/bash"
 description = "Check health status of all containers"
 run = """
 echo "=== Container Health ===" && \
-docker inspect --format='{{.Name}}: {{.State.Health.Status}}' ollama open-webui 2>/dev/null || \
+docker inspect ollama open-webui 2>/dev/null || \
 echo "Containers not running"
 """
 
@@ -105,3 +117,15 @@ run = """
 echo "Ollama API:    http://localhost:11434"
 echo "Open WebUI:    http://localhost:3000"
 """
+
+# =============================================================================
+# Claude Code Integration
+# =============================================================================
+
+[tasks.claude]
+description = "Run Claude Code with local Ollama (interactive model selection)"
+run = "bun ./bin/index.ts"
+
+[tasks."claude:model"]
+description = "Run Claude Code with specific model (usage: mise run claude:model <model-name>)"
+run = "bun ./bin/index.ts --model {{arg(name='model')}}"
