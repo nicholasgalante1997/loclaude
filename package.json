@@ -21,6 +21,11 @@
   "bugs": {
     "url": "https://github.com/nicholasgalante1997/docker-ollama/issues"
   },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "tag": "alpha"
+  },
   "files": [
     ".claude/CLAUDE.md",
     "bin",

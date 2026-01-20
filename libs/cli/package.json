@@ -1,9 +1,32 @@
 {
   "name": "@loclaude-internal/cli",
   "version": "0.0.1-alpha.1",
+  "description": "An internal @loclaude-internal package that supplies common CLI utilities.",
   "module": "dist/index.js",
   "type": "module",
-  "private": true,
+  "license": "MIT",
+  "keywords": [
+    "claude",
+    "ollama",
+    "llm",
+    "cli",
+    "ai",
+    "open-webui",
+    "claude-code"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicholasgalante1997/docker-ollama.git"
+  },
+  "homepage": "https://github.com/nicholasgalante1997/docker-ollama#readme",
+  "bugs": {
+    "url": "https://github.com/nicholasgalante1997/docker-ollama/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "tag": "alpha"
+  },
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -22,7 +45,9 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "LICENSE",
+    "README.md"
   ],
   "engines": {
     "bun": ">=1.3"
@@ -44,6 +69,11 @@
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@inquirer/prompts": "^8.2.0",
