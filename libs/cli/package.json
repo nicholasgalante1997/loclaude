@@ -33,7 +33,9 @@
     "build-types": "tsc -p tsconfig.json --emitDeclarationOnly",
     "bundle": "bun build.ts",
     "build": "run-p build-types bundle",
-    "postbuild": "npm pack"
+    "postbuild": "npm pack",
+    "test": "bun test",
+    "test:watch": "bun test --watch"
   },
   "devDependencies": {
     "@types/bun": "latest",

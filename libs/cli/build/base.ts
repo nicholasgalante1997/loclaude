@@ -1,12 +1,12 @@
 export const base_config: Bun.BuildConfig = {
-  entrypoints: ["lib/index.ts"],
-  outdir: "./dist",
-  format: "esm",
+  entrypoints: ['lib/index.ts'],
+  outdir: './dist',
+  format: 'esm',
   splitting: false,
-  sourcemap: "linked",
+  sourcemap: 'linked',
   minify: false,
-  root: ".",
-  packages: "bundle",
+  root: '.',
+  packages: 'bundle'
 };
 
 export default base_config;

@@ -1,28 +1,57 @@
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
 
 # Docker volumes and model data
 docker/models/
+models/
 
-# SSH keys (should never be committed)
+# SSH keys and secrets
 id_ed25519
 id_ed25519.pub
 *.pem
 *.key
+.env
+.env.*
 
 # Logs
 logs/
 *.log
 
 # Auto-generated files
-.github/instructions/snyk_rules.instructions.md
+.github/
 
 # OS files
 .DS_Store
 Thumbs.db
 
-# Bun dependencies
-node_modules
+# Dependencies (npm includes node_modules from files field if needed)
+node_modules/
 
-docker/models
+# Turborepo
+.turbo/
+
+# Build artifacts not needed in package
+*.tgz
+tmp/
+
+# Source files (dist is included via files field)
+libs/cli/lib/
+libs/cli/build/
+libs/cli/tsconfig.json
+libs/cli/build.ts
+
+# Development configs
+.changeset/
+tsconfig.json
+turbo.json
+mise.toml
+bun.lock
+
+# Documentation source (README included via files field)
+doc/
+
+# Scripts not needed by end users
+scripts/

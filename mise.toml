@@ -1,4 +1,13 @@
 # Mise configuration for Ollama + Open WebUI Docker setup
+
+[tools]
+bun = "1.3.6"
+node = "24"
+
+[env]
+_.file = [".env"]
+_.path = ["{{config_root}}/node_modules/.bin"]
+
 # Run `mise tasks` to see all available tasks
 
 [tasks]
@@ -124,8 +133,8 @@ echo "Open WebUI:    http://localhost:3000"
 
 [tasks.claude]
 description = "Run Claude Code with local Ollama (interactive model selection)"
-run = "bun ./bin/index.ts"
+run = "bun ./bin/index.ts x"
 
 [tasks."claude:model"]
 description = "Run Claude Code with specific model (usage: mise run claude:model <model-name>)"
-run = "bun ./bin/index.ts --model {{arg(name='model')}}"
+run = "bun ./bin/index.ts x --model {{arg(name='model')}}"

@@ -1,7 +1,26 @@
 {
   "name": "loclaude",
+  "version": "0.0.1-alpha.1",
+  "description": "Run Claude Code with local Ollama LLMs",
   "type": "module",
-  "version": "0.0.1-rc.1",
+  "license": "MIT",
+  "keywords": [
+    "claude",
+    "ollama",
+    "llm",
+    "cli",
+    "ai",
+    "open-webui",
+    "claude-code"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicholasgalante1997/docker-ollama.git"
+  },
+  "homepage": "https://github.com/nicholasgalante1997/docker-ollama#readme",
+  "bugs": {
+    "url": "https://github.com/nicholasgalante1997/docker-ollama/issues"
+  },
   "files": [
     ".claude/CLAUDE.md",
     "bin",
@@ -10,7 +29,8 @@
     "libs/cli/package.json",
     "libs/cli/dist",
     "README.md",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "LICENSE"
   ],
   "bin": {
     "loclaude": "bin/index.ts",
@@ -23,9 +43,19 @@
     "bun": ">=1.3"
   },
   "packageManager": "bun@1.3.6",
-  "devDependencies": {
-    "@types/bun": "latest",
-    "turbo": "^2.7.5"
+  "scripts": {
+    "lint": "eslint libs",
+    "format": "prettier --write libs",
+    "build": "turbo run build",
+    "test": "bun test libs/cli",
+    "prerelease-check": "./scripts/prerelease-check.sh",
+    "prepublishOnly": "bun run build",
+    "release": "bun run build && npm publish --access public",
+    "release:rc": "bun run build && npm publish --tag rc --access public",
+    "release:beta": "bun run build && npm publish --tag beta --access public"
+  },
+  "dependencies": {
+    "@loclaude-internal/cli": "workspace:*"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -35,7 +65,16 @@
       "optional": true
     }
   },
-  "dependencies": {
-    "@loclaude-internal/cli": "workspace:*"
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@eslint/json": "^0.14.0",
+    "@eslint/markdown": "^7.5.1",
+    "@types/bun": "latest",
+    "eslint": "^9.39.2",
+    "globals": "^17.0.0",
+    "jiti": "^2.6.1",
+    "prettier": "^3.8.0",
+    "turbo": "^2.7.5",
+    "typescript-eslint": "^8.53.1"
   }
 }

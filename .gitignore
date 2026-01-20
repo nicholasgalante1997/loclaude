@@ -25,6 +25,11 @@ Thumbs.db
 # Bun dependencies
 node_modules
 
+# Turborepo
+.turbo
+
 # Bundled files
 dist/
 *.tgz
+
+tmp

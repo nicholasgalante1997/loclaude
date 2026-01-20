@@ -1,4 +1,4 @@
-import type { BuildConfig, BuildOutput } from "bun";
+import type { BuildConfig, BuildOutput } from 'bun';
 
 export async function concurrent_build(...configs: BuildConfig[]) {
   let error = null,

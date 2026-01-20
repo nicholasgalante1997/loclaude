@@ -1,0 +1,765 @@
+/* ============================================================================
+   loclaude Documentation Theme
+   A modern, clean theme using Fira Code and Fira Mono fonts
+   ============================================================================ */
+
+:root {
+  /* Brand Colors */
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --primary-dark: #4f46e5;
+  --primary-bg: #eef2ff;
+
+  /* Accent Colors */
+  --accent-green: #10b981;
+  --accent-orange: #f59e0b;
+  --accent-red: #ef4444;
+  --accent-cyan: #06b6d4;
+
+  /* Neutral Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --bg-code: #1e293b;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-inverse: #f8fafc;
+
+  --border-color: #e2e8f0;
+  --border-light: #f1f5f9;
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Fira Code', 'Fira Mono', 'Consolas', monospace;
+
+  /* Spacing */
+  --sidebar-width: 260px;
+  --content-max-width: 800px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+}
+
+/* ============================================================================
+   Base Styles
+   ============================================================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================================
+   Sidebar
+   ============================================================================ */
+
+.sidebar {
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border-color);
+  padding: 0 !important;
+  width: var(--sidebar-width) !important;
+}
+
+.sidebar > h1 {
+  margin: 0 !important;
+  padding: 1.25rem 1.25rem 1rem !important;
+  font-size: 1.125rem !important;
+  font-weight: 700 !important;
+  color: var(--primary) !important;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sidebar > h1 a {
+  color: var(--primary) !important;
+  text-decoration: none !important;
+}
+
+.sidebar-nav {
+  padding: 0.75rem 0 !important;
+}
+
+.sidebar-nav ul {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+.sidebar-nav > ul > li {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Top-level section headers */
+.sidebar-nav > ul > li > p {
+  margin: 0 !important;
+  padding: 0.625rem 1.25rem 0.375rem !important;
+  font-size: 0.6875rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: var(--text-muted) !important;
+}
+
+/* Navigation links */
+.sidebar-nav li a {
+  display: block !important;
+  padding: 0.4rem 1.25rem !important;
+  color: var(--text-secondary) !important;
+  text-decoration: none !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  transition: all var(--transition-fast) !important;
+  border-left: 2px solid transparent !important;
+}
+
+.sidebar-nav li a:hover {
+  color: var(--primary) !important;
+  background: var(--primary-bg) !important;
+  border-left-color: var(--primary-light) !important;
+}
+
+.sidebar-nav li.active > a {
+  color: var(--primary) !important;
+  background: var(--primary-bg) !important;
+  border-left-color: var(--primary) !important;
+  font-weight: 600 !important;
+}
+
+/* Nested navigation */
+.sidebar-nav ul ul {
+  padding-left: 0 !important;
+}
+
+.sidebar-nav ul ul a {
+  padding-left: 2rem !important;
+  font-size: 0.8125rem !important;
+  font-weight: 400 !important;
+}
+
+/* Hide auto-generated sub-items from page headings */
+.sidebar-nav .app-sub-sidebar {
+  display: none !important;
+}
+
+/* Sidebar Toggle */
+.sidebar-toggle {
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 6px !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+}
+
+/* ============================================================================
+   Search
+   ============================================================================ */
+
+.search {
+  margin: 0 !important;
+  padding: 0.75rem 1rem !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  background: var(--bg-primary) !important;
+}
+
+.search input {
+  width: 100% !important;
+  padding: 0.5rem 0.75rem !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 6px !important;
+  font-family: var(--font-sans) !important;
+  font-size: 0.8125rem !important;
+  background: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.search input:focus {
+  outline: none !important;
+  border-color: var(--primary) !important;
+  background: var(--bg-primary) !important;
+  box-shadow: 0 0 0 2px var(--primary-bg) !important;
+}
+
+.search input::placeholder {
+  color: var(--text-muted) !important;
+}
+
+.search .results-panel {
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 6px !important;
+  box-shadow: var(--shadow-lg) !important;
+  margin-top: 0.5rem !important;
+}
+
+.search .matching-post {
+  padding: 0.75rem 1rem !important;
+  border-bottom: 1px solid var(--border-light) !important;
+}
+
+.search .matching-post:last-child {
+  border-bottom: none !important;
+}
+
+.search .matching-post h2 {
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  color: var(--primary) !important;
+  margin: 0 0 0.25rem !important;
+}
+
+.search .matching-post p {
+  font-size: 0.75rem !important;
+  color: var(--text-muted) !important;
+  margin: 0 !important;
+}
+
+/* ============================================================================
+   Main Content
+   ============================================================================ */
+
+.content {
+  padding: 1.5rem 2.5rem 3rem !important;
+}
+
+.markdown-section {
+  max-width: var(--content-max-width) !important;
+  margin: 0 auto !important;
+}
+
+/* ============================================================================
+   Typography
+   ============================================================================ */
+
+.markdown-section h1,
+.markdown-section h2,
+.markdown-section h3,
+.markdown-section h4,
+.markdown-section h5,
+.markdown-section h6 {
+  font-family: var(--font-sans) !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  line-height: 1.35 !important;
+}
+
+.markdown-section h1 {
+  font-size: 1.875rem !important;
+  padding-bottom: 0.5rem !important;
+  border-bottom: 2px solid var(--primary) !important;
+  margin: 0 0 1.25rem 0 !important;
+}
+
+.markdown-section h2 {
+  font-size: 1.375rem !important;
+  padding-bottom: 0.375rem !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  margin: 2rem 0 1rem 0 !important;
+}
+
+.markdown-section h3 {
+  font-size: 1.125rem !important;
+  margin: 1.5rem 0 0.75rem 0 !important;
+}
+
+.markdown-section h4 {
+  font-size: 1rem !important;
+  color: var(--text-secondary) !important;
+  margin: 1.25rem 0 0.5rem 0 !important;
+}
+
+.markdown-section p {
+  margin: 0.75rem 0 !important;
+  color: var(--text-secondary) !important;
+}
+
+.markdown-section a {
+  color: var(--primary) !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+}
+
+.markdown-section a:hover {
+  text-decoration: underline !important;
+}
+
+.markdown-section strong {
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+}
+
+/* ============================================================================
+   Code Blocks
+   ============================================================================ */
+
+.markdown-section code,
+.markdown-section pre {
+  font-family: var(--font-mono) !important;
+  font-size: 0.8125rem !important;
+  font-feature-settings: 'liga' 1, 'calt' 1 !important;
+}
+
+.markdown-section code {
+  background: var(--bg-tertiary) !important;
+  color: var(--primary-dark) !important;
+  padding: 0.15em 0.35em !important;
+  border-radius: 4px !important;
+  font-weight: 500 !important;
+}
+
+.markdown-section pre {
+  background: var(--bg-code) !important;
+  border-radius: 8px !important;
+  padding: 1rem 1.25rem !important;
+  margin: 1rem 0 !important;
+  overflow-x: auto !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.markdown-section pre code {
+  background: transparent !important;
+  color: var(--text-inverse) !important;
+  padding: 0 !important;
+  font-weight: 400 !important;
+  font-size: 0.8125rem !important;
+  line-height: 1.6 !important;
+}
+
+/* Copy Code Button */
+.docsify-copy-code-button {
+  font-family: var(--font-mono) !important;
+  font-size: 0.6875rem !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: var(--text-muted) !important;
+  border-radius: 4px !important;
+  padding: 0.2rem 0.5rem !important;
+}
+
+.docsify-copy-code-button:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: var(--text-inverse) !important;
+}
+
+/* Syntax Highlighting */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #64748b !important;
+}
+
+.token.punctuation {
+  color: #94a3b8 !important;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol {
+  color: #f472b6 !important;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin {
+  color: #a5f3fc !important;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #fcd34d !important;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #c4b5fd !important;
+}
+
+.token.function,
+.token.class-name {
+  color: #67e8f9 !important;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #fda4af !important;
+}
+
+/* ============================================================================
+   Tables
+   ============================================================================ */
+
+.markdown-section table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 1rem 0 !important;
+  font-size: 0.8125rem !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 6px !important;
+  overflow: hidden !important;
+}
+
+.markdown-section table th {
+  background: var(--bg-tertiary) !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+  padding: 0.5rem 0.75rem !important;
+  color: var(--text-primary) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  white-space: nowrap !important;
+}
+
+.markdown-section table td {
+  padding: 0.5rem 0.75rem !important;
+  border-bottom: 1px solid var(--border-light) !important;
+  color: var(--text-secondary) !important;
+  vertical-align: top !important;
+}
+
+.markdown-section table tr:last-child td {
+  border-bottom: none !important;
+}
+
+.markdown-section table tr:hover td {
+  background: var(--bg-secondary) !important;
+}
+
+.markdown-section table code {
+  font-size: 0.75rem !important;
+  white-space: nowrap !important;
+}
+
+/* ============================================================================
+   Blockquotes
+   ============================================================================ */
+
+.markdown-section blockquote {
+  margin: 1rem 0 !important;
+  padding: 0.75rem 1rem !important;
+  background: var(--primary-bg) !important;
+  border-left: 3px solid var(--primary) !important;
+  border-radius: 0 6px 6px 0 !important;
+  color: var(--text-secondary) !important;
+}
+
+.markdown-section blockquote p {
+  margin: 0 !important;
+}
+
+/* Tip/Warning/Danger Callouts */
+.markdown-section .tip,
+.markdown-section .warn,
+.markdown-section .danger {
+  padding: 0.75rem 1rem !important;
+  border-radius: 6px !important;
+  margin: 1rem 0 !important;
+}
+
+.markdown-section .tip {
+  background: #ecfdf5 !important;
+  border-left: 3px solid var(--accent-green) !important;
+}
+
+.markdown-section .warn {
+  background: #fffbeb !important;
+  border-left: 3px solid var(--accent-orange) !important;
+}
+
+.markdown-section .danger {
+  background: #fef2f2 !important;
+  border-left: 3px solid var(--accent-red) !important;
+}
+
+/* ============================================================================
+   Lists
+   ============================================================================ */
+
+.markdown-section ul,
+.markdown-section ol {
+  padding-left: 1.25rem !important;
+  margin: 0.75rem 0 !important;
+  color: var(--text-secondary) !important;
+}
+
+.markdown-section li {
+  margin: 0.35rem 0 !important;
+}
+
+.markdown-section li::marker {
+  color: var(--primary) !important;
+}
+
+/* ============================================================================
+   Cover Page
+   ============================================================================ */
+
+section.cover {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%) !important;
+  color: var(--text-inverse) !important;
+}
+
+section.cover .cover-main {
+  max-width: 600px !important;
+  text-align: center !important;
+  margin: 0 auto !important;
+}
+
+section.cover img {
+  margin-bottom: 1.5rem !important;
+}
+
+section.cover h1 {
+  font-size: 3rem !important;
+  font-weight: 800 !important;
+  margin: 0 0 0.5rem 0 !important;
+  color: white !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+section.cover blockquote {
+  font-size: 1.125rem !important;
+  color: #c7d2fe !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0.5rem 0 1.5rem 0 !important;
+}
+
+section.cover blockquote p {
+  color: #c7d2fe !important;
+}
+
+section.cover ul {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 1.5rem 0 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.5rem !important;
+  justify-content: center !important;
+}
+
+section.cover ul li {
+  background: rgba(255, 255, 255, 0.1) !important;
+  padding: 0.4rem 0.875rem !important;
+  border-radius: 100px !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  color: #e0e7ff !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  margin: 0 !important;
+}
+
+section.cover .buttons {
+  margin-top: 2rem !important;
+}
+
+section.cover .buttons a {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 0.75rem 1.75rem !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 0.9375rem !important;
+  text-decoration: none !important;
+  transition: all var(--transition-normal) !important;
+  margin: 0.25rem !important;
+}
+
+section.cover .buttons a:first-child {
+  background: white !important;
+  color: var(--primary-dark) !important;
+}
+
+section.cover .buttons a:first-child:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+section.cover .buttons a:last-child {
+  background: transparent !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+section.cover .buttons a:last-child:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* ============================================================================
+   Pagination
+   ============================================================================ */
+
+.docsify-pagination-container {
+  margin-top: 2.5rem !important;
+  padding-top: 1.5rem !important;
+  border-top: 1px solid var(--border-color) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 1rem !important;
+}
+
+.pagination-item {
+  flex: 1 !important;
+  max-width: 45% !important;
+}
+
+.pagination-item a {
+  display: block !important;
+  padding: 0.75rem 1rem !important;
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 6px !important;
+  text-decoration: none !important;
+  transition: all var(--transition-fast) !important;
+}
+
+.pagination-item a:hover {
+  background: var(--primary-bg) !important;
+  border-color: var(--primary-light) !important;
+}
+
+.pagination-item-label {
+  font-size: 0.6875rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: var(--text-muted) !important;
+  margin-bottom: 0.125rem !important;
+}
+
+.pagination-item-title {
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  color: var(--primary) !important;
+}
+
+/* ============================================================================
+   Tabs Plugin
+   ============================================================================ */
+
+.docsify-tabs__tab {
+  font-family: var(--font-sans) !important;
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  padding: 0.5rem 1rem !important;
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-secondary) !important;
+}
+
+.docsify-tabs__tab--active {
+  background: var(--bg-primary) !important;
+  color: var(--primary) !important;
+  border-bottom-color: var(--bg-primary) !important;
+}
+
+.docsify-tabs__content {
+  border: 1px solid var(--border-color) !important;
+  border-top: none !important;
+  padding: 1rem !important;
+  background: var(--bg-primary) !important;
+}
+
+/* ============================================================================
+   Responsive
+   ============================================================================ */
+
+@media screen and (max-width: 768px) {
+  :root {
+    --sidebar-width: 240px !important;
+  }
+
+  .content {
+    padding: 1rem 1.25rem 2rem !important;
+  }
+
+  .markdown-section h1 {
+    font-size: 1.5rem !important;
+  }
+
+  .markdown-section h2 {
+    font-size: 1.25rem !important;
+  }
+
+  section.cover h1 {
+    font-size: 2.25rem !important;
+  }
+
+  .docsify-pagination-container {
+    flex-direction: column !important;
+  }
+
+  .pagination-item {
+    max-width: 100% !important;
+  }
+}
+
+/* ============================================================================
+   Scrollbar
+   ============================================================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ============================================================================
+   GitHub Corner
+   ============================================================================ */
+
+.github-corner svg {
+  fill: var(--primary) !important;
+  color: var(--bg-primary) !important;
+}
+
+section.cover .github-corner svg {
+  fill: rgba(255, 255, 255, 0.2) !important;
+  color: transparent !important;
+}

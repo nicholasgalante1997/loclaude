@@ -1,43 +1,53 @@
 # Claude Code Instructions
 
-Guidelines for working with this Ollama + Open WebUI Docker repository.
+Guidelines for working with the loclaude CLI and Docker repository.
 
 ## Project Overview
 
-This is a Docker-based setup for running Ollama (LLM inference) with Open WebUI (chat interface) on NVIDIA GPU systems. The stack is managed via Docker Compose with mise tasks for convenience.
+**loclaude** is an npm package that runs Claude Code with local Ollama LLMs. It provides:
+- CLI commands for launching Claude Code connected to Ollama
+- Docker container management for Ollama + Open WebUI
+- Project scaffolding with `loclaude init`
+- Cross-runtime support (Bun and Node.js)
 
 ## Key Files
 
 | File | Purpose |
 |------|---------|
-| `docker/docker-compose.yml` | Main service definitions (ollama + open-webui) |
-| `mise.toml` | Task runner configuration (use `mise tasks` to list) |
-| `doc/SOURCES.md` | Reference documentation and external links |
-| `scripts/run-compose.sh` | Advanced compose helper (multi-file compose setups) |
+| `bin/index.ts` | Bun entry point |
+| `bin/index.mjs` | Node.js entry point |
+| `libs/cli/lib/cac.ts` | CLI command definitions |
+| `libs/cli/lib/commands/` | Command implementations |
+| `libs/cli/lib/config.ts` | Configuration system |
+| `libs/cli/lib/spawn.ts` | Cross-runtime process spawning |
+| `docker/docker-compose.yml` | Bundled Docker template |
+| `package.json` | Root package (published to npm) |
+| `libs/cli/package.json` | Internal CLI workspace package |
 
 ## Patterns & Conventions
 
+### CLI Commands
+
+Command naming follows these conventions:
+- Hyphenated subcommands: `docker-up`, `models-pull`
+- Base commands for listing: `models` (lists models), `config` (shows config)
+- Action suffixes: `-pull`, `-rm`, `-show`, `-run`
+
+### Configuration Priority
+
+1. CLI arguments (highest)
+2. Environment variables (`OLLAMA_URL`, `OLLAMA_MODEL`, etc.)
+3. Project config (`./.loclaude/config.json`)
+4. User config (`~/.config/loclaude/config.json`)
+5. Default values (lowest)
+
 ### Docker Compose
 
-- Single compose file at `docker/docker-compose.yml`
+- Bundled template in `libs/cli/lib/commands/init.ts`
+- Deployed to user projects via `loclaude init`
 - GPU support uses NVIDIA runtime with `deploy.resources.reservations.devices`
 - Service names: `ollama`, `open-webui`
-- Container names match service names for easy `docker exec`
 - Health checks defined for both services
-
-### Mise Tasks
-
-Tasks are defined in root `mise.toml`. Naming conventions:
-- Simple verbs for common actions: `up`, `down`, `restart`, `status`
-- Colon-separated for service-specific: `logs:ollama`, `shell:webui`
-- Model operations use ollama verbs: `pull`, `list`, `rm`, `run`, `show`
-
-### When Adding New Tasks
-
-1. Add to `mise.toml` under the appropriate section
-2. Use `dir = "{{cwd}}/docker"` when running docker compose commands
-3. Include a clear `description`
-4. For tasks with arguments, use `{{arg(name='argname')}}`
 
 ### Docker Volume Mounts
 
@@ -52,28 +62,114 @@ Services communicate via Docker's internal network:
 
 ## Common Operations
 
-### Testing Changes
+### Testing CLI Changes
 
 ```bash
-# Rebuild and restart
-mise run down && mise run up
+# Rebuild
+bun run build
 
-# Check logs for errors
-mise run logs
+# Test commands
+bun bin/index.ts doctor
+node bin/index.mjs config
 
-# Verify GPU access
-mise run gpu
+# Test in a fresh directory
+mkdir /tmp/test-loclaude && cd /tmp/test-loclaude
+bun ~/path/to/ollama/bin/index.ts init
 ```
 
-### Pulling New Models
+### Local Development Workflow
 
 ```bash
-mise run pull llama3.2
-mise run list  # Verify
+# Start containers
+loclaude docker-up  # or: bun bin/index.ts docker-up
+
+# Pull a model
+loclaude models-pull qwen3-coder:30b
+
+# Run Claude Code with local Ollama
+loclaude run
+```
+
+## CLI Development
+
+The `loclaude` CLI is built in `libs/cli/` as an internal workspace package.
+
+### Architecture
+
+```
+libs/cli/
+├── lib/
+│   ├── cac.ts           # CLI definition using cac
+│   ├── commands/        # Command implementations
+│   │   ├── init.ts      # Project scaffolding
+│   │   ├── doctor.ts    # System checks
+│   │   ├── docker.ts    # Container management
+│   │   ├── models.ts    # Ollama model operations
+│   │   └── config.ts    # Config display
+│   ├── config.ts        # Configuration loading/merging
+│   ├── spawn.ts         # Cross-runtime process spawning
+│   ├── utils.ts         # Ollama API utilities
+│   └── constants.ts     # Default values
+├── build/               # Bun build configuration
+└── dist/                # Built bundles (index.js, index.bun.js)
+```
+
+### Building
+
+```bash
+bun run build          # Build all packages via turbo
+cd libs/cli && bun run build  # Build CLI only
+```
+
+### Testing Locally
+
+```bash
+# Direct execution
+bun bin/index.ts --help
+node bin/index.mjs --help
+
+# Test specific commands
+bun bin/index.ts doctor
+node bin/index.mjs config
+```
+
+### Adding New Commands
+
+1. Create command file in `libs/cli/lib/commands/`
+2. Export functions from `libs/cli/lib/commands/index.ts`
+3. Register with cac in `libs/cli/lib/cac.ts`
+4. Rebuild: `bun run build`
+
+### Cross-Runtime Spawning
+
+Use the `spawn` function from `./spawn.ts` instead of `Bun.spawn()` directly:
+
+```typescript
+import { spawn, spawnCapture } from "./spawn";
+
+// Inherit stdio (for interactive commands)
+await spawn(["docker", "compose", "up"], { env: process.env });
+
+// Capture output
+const result = await spawnCapture(["docker", "--version"]);
+console.log(result.stdout);
+```
+
+### Releasing
+
+```bash
+# Run pre-release checks
+bun run prerelease-check
+
+# Publish to npm
+bun run release        # Publish as latest
+bun run release:rc     # Publish with rc tag
+bun run release:beta   # Publish with beta tag
 ```
 
 ## Do Not
 
 - Commit anything in `docker/models/` (gitignored, contains large model files)
-- Remove the NVIDIA runtime configuration without checking GPU availability
-- Change container names without updating mise tasks that reference them
+- Use `Bun.spawn()` directly - use `spawn()` from `./spawn.ts` for cross-runtime support
+- Hardcode Ollama URLs - always use `getOllamaUrl()` from config
+- Forget to export new commands from `libs/cli/lib/commands/index.ts`
