@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.0.1-rc.1] - 2025-01-19
+## [0.0.1-alpha.2] - 2025-01-20
+
+### Changed
+
+- Changes `@loclaude-internal/cli` dependency reference from `workspace:*` to pinned version `v0.0.1-alpha.1`
+
+## [0.0.1-alpha.1] - 2025-01-19
 
 ### Added
 
@@ -43,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Notes
 
-This is a release candidate. The API and command structure may change before 1.0.
+This is an alpha release. The API and command structure may change before 1.0.
 
 [Unreleased]: https://github.com/nicholasgalante1997/docker-ollama/compare/v0.0.1-rc.1...HEAD
-[0.0.1-rc.1]: https://github.com/nicholasgalante1997/docker-ollama/releases/tag/v0.0.1-rc.1
+[0.0.1-alpha.1]: https://github.com/nicholasgalante1997/docker-ollama/releases/tag/v0.0.1-alpha.1

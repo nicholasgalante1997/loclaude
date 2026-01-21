@@ -1,9 +1,9 @@
 {
   "name": "loclaude",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1-alpha.2",
   "description": "Run Claude Code with local Ollama LLMs",
   "type": "module",
-  "license": "MIT",
+  "license": "./LICENSE",
   "keywords": [
     "claude",
     "ollama",
@@ -12,6 +12,13 @@
     "ai",
     "open-webui",
     "claude-code"
+  ],
+  "contributors": [
+    {
+      "email": "rustycloud42@protonmail.com",
+      "name": "mega-blastoise",
+      "url": "https://github.com/mega-blastoise"
+    }
   ],
   "repository": {
     "type": "git",
@@ -57,10 +64,11 @@
     "prepublishOnly": "bun run build",
     "release": "bun run build && npm publish --access public",
     "release:rc": "bun run build && npm publish --tag rc --access public",
+    "release:alpha": "bun run build && npm publish --tag alpha --access public",
     "release:beta": "bun run build && npm publish --tag beta --access public"
   },
   "dependencies": {
-    "@loclaude-internal/cli": "workspace:*"
+    "@loclaude-internal/cli": "^0.0.1-alpha.1"
   },
   "peerDependencies": {
     "typescript": "^5"

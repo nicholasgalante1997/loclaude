@@ -1,11 +1,11 @@
 {
   "lockfileVersion": 1,
-  "configVersion": 0,
+  "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "ollama",
+      "name": "loclaude",
       "dependencies": {
-        "@loclaude-internal/cli": "workspace:*",
+        "@loclaude-internal/cli": "0.0.1-alpha.1",
       },
       "devDependencies": {
         "@eslint/js": "^9.39.2",
@@ -42,6 +42,9 @@
       "peerDependencies": {
         "typescript": "^5",
       },
+      "optionalPeers": [
+        "typescript",
+      ],
     },
   },
   "packages": {
