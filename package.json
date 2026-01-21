@@ -56,6 +56,7 @@
   },
   "packageManager": "bun@1.3.6",
   "scripts": {
+    "docs": "bunx serve ./docs",
     "lint": "eslint libs",
     "format": "prettier --write libs",
     "build": "turbo run build",

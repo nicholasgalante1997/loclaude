@@ -2,21 +2,43 @@
  * config command - Show and manage configuration
  */
 
-import { inspect } from 'util';
 import { loadConfig, getActiveConfigPath, getConfigSearchPaths } from '../config';
+import { header, info, dim, green, cyan, magenta, file, cmd, labelValue, bold } from '../output';
 
 export async function configShow(): Promise<void> {
   const config = loadConfig();
   const activePath = getActiveConfigPath();
 
-  console.log('Current configuration:\n');
-  console.log(inspect(config, false, 3, true));
+  header('Current Configuration');
+  console.log('');
 
-  console.log('\n---');
-  if (activePath) {
-    console.log(`Loaded from: ${activePath}`);
+  // Ollama settings
+  console.log(cyan('Ollama:'));
+  labelValue('  URL', config.ollama.url);
+  labelValue('  Default Model', magenta(config.ollama.defaultModel));
+  console.log('');
+
+  // Docker settings
+  console.log(cyan('Docker:'));
+  labelValue('  Compose File', config.docker.composeFile);
+  labelValue('  GPU Mode', config.docker.gpu ? green('enabled') : dim('disabled'));
+  console.log('');
+
+  // Claude settings
+  console.log(cyan('Claude:'));
+  if (config.claude.extraArgs.length > 0) {
+    labelValue('  Extra Args', config.claude.extraArgs.join(' '));
   } else {
-    console.log('Using default configuration (no config file found)');
+    labelValue('  Extra Args', dim('none'));
+  }
+  console.log('');
+
+  // Config source
+  console.log(dim('─'.repeat(40)));
+  if (activePath) {
+    console.log(dim(`Loaded from: ${file(activePath)}`));
+  } else {
+    console.log(dim('Using default configuration (no config file found)'));
   }
 }
 
@@ -24,16 +46,29 @@ export async function configPaths(): Promise<void> {
   const paths = getConfigSearchPaths();
   const activePath = getActiveConfigPath();
 
-  console.log('Config file search paths (in priority order):\n');
+  header('Config Search Paths');
+  console.log('');
+  console.log(dim('Files are checked in priority order (first found wins):'));
+  console.log('');
 
-  for (const path of paths) {
-    const isActive = path === activePath;
-    const marker = isActive ? ' ← active' : '';
-    console.log(`  ${path}${marker}`);
+  for (let i = 0; i < paths.length; i++) {
+    const configPath = paths[i];
+    if (!configPath) continue;
+
+    const isActive = configPath === activePath;
+    const num = `${i + 1}.`;
+
+    if (isActive) {
+      console.log(`  ${num} ${file(configPath)} ${green('← active')}`);
+    } else {
+      console.log(`  ${num} ${dim(configPath)}`);
+    }
   }
 
+  console.log('');
+
   if (!activePath) {
-    console.log('\nNo config file found. Using defaults.');
-    console.log("Run 'loclaude init' to create a project config.");
+    console.log(info('No config file found. Using defaults.'));
+    console.log(dim(`  Run ${cmd('loclaude init')} to create a project config.`));
   }
 }

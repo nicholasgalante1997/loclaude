@@ -4,6 +4,20 @@
 
 import bytes from 'bytes';
 import { getOllamaUrl } from '../config';
+import {
+  header,
+  success,
+  error,
+  info,
+  dim,
+  bold,
+  cyan,
+  yellow,
+  green,
+  magenta,
+  tableHeader,
+  cmd
+} from '../output';
 import type { OllamaModel, OllamaTagsResponse } from '../types';
 import { spawn, spawnCapture } from '../spawn';
 
@@ -52,57 +66,79 @@ async function runOllamaCommand(args: string[]): Promise<number> {
   }
 }
 
+/**
+ * Format size with color based on magnitude
+ */
+function formatSize(sizeBytes: number): string {
+  const sizeStr = bytes(sizeBytes) ?? '?';
+  const sizeNum = sizeBytes / (1024 * 1024 * 1024); // Convert to GB
+
+  if (sizeNum > 20) {
+    return yellow(sizeStr); // Large models (>20GB) in yellow
+  } else if (sizeNum > 10) {
+    return cyan(sizeStr); // Medium models (10-20GB) in cyan
+  }
+  return dim(sizeStr); // Small models in dim
+}
+
 export async function modelsList(): Promise<void> {
   try {
     const models = await fetchModels();
 
     if (models.length === 0) {
-      console.log('No models installed.');
-      console.log('\nPull a model with: loclaude models-pull <model-name>');
-      console.log('Example: loclaude models-pull llama3.2');
+      header('Installed Models');
+      console.log('');
+      console.log(info('No models installed.'));
+      console.log('');
+      console.log(`Pull a model with: ${cmd('loclaude models-pull <model-name>')}`);
+      console.log(`Example: ${cmd('loclaude models-pull llama3.2')}`);
       return;
     }
 
-    console.log('Installed models:\n');
+    header('Installed Models');
+    console.log('');
 
     // Calculate column widths
     const nameWidth = Math.max(...models.map((m) => m.name.length), 'NAME'.length);
     const sizeWidth = 10;
+    const modifiedWidth = 20;
 
     // Header
-    console.log(`${'NAME'.padEnd(nameWidth)}  ${'SIZE'.padStart(sizeWidth)}  MODIFIED`);
-    console.log('-'.repeat(nameWidth + sizeWidth + 30));
+    tableHeader(['NAME', 'SIZE', 'MODIFIED'], [nameWidth, sizeWidth, modifiedWidth]);
 
     // Rows
     for (const model of models) {
-      const name = model.name.padEnd(nameWidth);
-      const size = (bytes(model.size) ?? '?').padStart(sizeWidth);
-      const modified = formatRelativeTime(model.modified_at);
+      const name = magenta(model.name.padEnd(nameWidth));
+      const size = formatSize(model.size).padStart(sizeWidth);
+      const modified = dim(formatRelativeTime(model.modified_at));
       console.log(`${name}  ${size}  ${modified}`);
     }
 
-    console.log(`\n${models.length} model(s) installed`);
-  } catch (error) {
+    console.log('');
+    console.log(dim(`${models.length} model(s) installed`));
+  } catch (err) {
     const ollamaUrl = getOllamaUrl();
-    console.error('Error: Could not connect to Ollama at', ollamaUrl);
-    console.error('Make sure Ollama is running: loclaude docker-up');
+    console.log(error(`Could not connect to Ollama at ${ollamaUrl}`));
+    console.log(dim(`  Make sure Ollama is running: ${cmd('loclaude docker-up')}`));
     process.exit(1);
   }
 }
 
 export async function modelsPull(modelName: string): Promise<void> {
   if (!modelName) {
-    console.error('Error: Model name required');
-    console.error('Usage: loclaude models pull <model-name>');
-    console.error('Example: loclaude models pull llama3.2');
+    console.log(error('Model name required'));
+    console.log(dim(`Usage: ${cmd('loclaude models-pull <model-name>')}`));
+    console.log(dim(`Example: ${cmd('loclaude models-pull llama3.2')}`));
     process.exit(1);
   }
 
-  console.log(`Pulling model: ${modelName}\n`);
+  console.log(info(`Pulling model: ${magenta(modelName)}`));
+  console.log('');
   const exitCode = await runOllamaCommand(['pull', modelName]);
 
   if (exitCode === 0) {
-    console.log(`\n✓ Model '${modelName}' pulled successfully`);
+    console.log('');
+    console.log(success(`Model '${magenta(modelName)}' pulled successfully`));
   }
 
   process.exit(exitCode);
@@ -110,16 +146,18 @@ export async function modelsPull(modelName: string): Promise<void> {
 
 export async function modelsRm(modelName: string): Promise<void> {
   if (!modelName) {
-    console.error('Error: Model name required');
-    console.error('Usage: loclaude models rm <model-name>');
+    console.log(error('Model name required'));
+    console.log(dim(`Usage: ${cmd('loclaude models-rm <model-name>')}`));
     process.exit(1);
   }
 
-  console.log(`Removing model: ${modelName}\n`);
+  console.log(info(`Removing model: ${magenta(modelName)}`));
+  console.log('');
   const exitCode = await runOllamaCommand(['rm', modelName]);
 
   if (exitCode === 0) {
-    console.log(`\n✓ Model '${modelName}' removed`);
+    console.log('');
+    console.log(success(`Model '${magenta(modelName)}' removed`));
   }
 
   process.exit(exitCode);
@@ -127,22 +165,26 @@ export async function modelsRm(modelName: string): Promise<void> {
 
 export async function modelsShow(modelName: string): Promise<void> {
   if (!modelName) {
-    console.error('Error: Model name required');
-    console.error('Usage: loclaude models show <model-name>');
+    console.log(error('Model name required'));
+    console.log(dim(`Usage: ${cmd('loclaude models-show <model-name>')}`));
     process.exit(1);
   }
 
+  console.log(info(`Model details: ${magenta(modelName)}`));
+  console.log('');
   const exitCode = await runOllamaCommand(['show', modelName]);
   process.exit(exitCode);
 }
 
 export async function modelsRun(modelName: string): Promise<void> {
   if (!modelName) {
-    console.error('Error: Model name required');
-    console.error('Usage: loclaude models run <model-name>');
+    console.log(error('Model name required'));
+    console.log(dim(`Usage: ${cmd('loclaude models-run <model-name>')}`));
     process.exit(1);
   }
 
+  console.log(info(`Running model: ${magenta(modelName)}`));
+  console.log('');
   const exitCode = await runOllamaCommand(['run', modelName]);
   process.exit(exitCode);
 }

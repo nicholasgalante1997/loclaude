@@ -31,8 +31,8 @@
   --border-light: #f1f5f9;
 
   /* Typography */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'Fira Code', 'Fira Mono', 'Consolas', monospace;
+  --font-sans: 'Fira Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Space Mono', 'Fira Mono', 'Consolas', monospace;
 
   /* Spacing */
   --sidebar-width: 260px;

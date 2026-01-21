@@ -54,7 +54,9 @@ cli
   .command('init', 'Initialize a new loclaude project')
   .option('--force', 'Overwrite existing files')
   .option('--no-webui', 'Skip Open WebUI in docker-compose')
-  .action(async (options: { force?: boolean; noWebui?: boolean }) => {
+  .option('--gpu', 'Force GPU mode (NVIDIA)')
+  .option('--no-gpu', 'Force CPU-only mode')
+  .action(async (options: { force?: boolean; noWebui?: boolean; gpu?: boolean; noGpu?: boolean }) => {
     await init(options);
   });
 

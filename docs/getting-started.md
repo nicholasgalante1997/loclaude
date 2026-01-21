@@ -12,9 +12,16 @@ Before installing loclaude, ensure you have the following:
 |-------------|---------|---------------|
 | Docker | 20.10+ | `docker --version` |
 | Docker Compose | v2+ | `docker compose version` |
-| NVIDIA Drivers | 525+ | `nvidia-smi` |
-| NVIDIA Container Toolkit | Latest | `docker run --gpus all nvidia/cuda:11.0-base nvidia-smi` |
 | Claude Code | Latest | `claude --version` |
+
+### For GPU Mode (Recommended)
+
+| Requirement | Version | Check Command |
+|-------------|---------|---------------|
+| NVIDIA Drivers | 525+ | `nvidia-smi` |
+| NVIDIA Container Toolkit | Latest | `docker run --gpus all nvidia/cuda:12.0-base nvidia-smi` |
+
+> **Note:** GPU is optional! loclaude works in CPU-only mode with `--no-gpu` flag.
 
 ### Runtime (one of)
 
@@ -61,22 +68,42 @@ After installing, verify everything is set up correctly:
 loclaude doctor
 ```
 
-You should see output like:
+### With GPU
 
 ```
-Checking system requirements...
+  System Health Check
+  ─────────────────────
 
 ✓ Docker: Installed (Docker version 28.x.x)
 ✓ Docker Compose: Installed (v2) (Docker Compose version v2.x.x)
 ✓ NVIDIA GPU: 1 GPU(s) detected (NVIDIA RTX 4090)
 ✓ NVIDIA Container Toolkit: nvidia runtime available
 ✓ Claude Code: Installed (2.x.x)
-✗ Ollama API: Not running
+⚠ Ollama API: Not reachable
+    → Cannot connect to http://localhost:11434. Start Ollama: loclaude docker-up
 
-Some checks failed. See above for details.
+1 warning(s). loclaude may work with limited functionality.
 ```
 
-> **Note:** The Ollama API check will fail until you start the containers.
+### CPU-Only (No GPU)
+
+```
+  System Health Check
+  ─────────────────────
+
+✓ Docker: Installed (Docker version 28.x.x)
+✓ Docker Compose: Installed (v2) (Docker Compose version v2.x.x)
+⚠ NVIDIA GPU: nvidia-smi not found
+    → GPU support requires NVIDIA drivers. CPU-only mode will be used.
+⚠ NVIDIA Container Toolkit: nvidia runtime not found
+    → Install: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
+✓ Claude Code: Installed (2.x.x)
+⚠ Ollama API: Not reachable
+
+3 warning(s). loclaude may work with limited functionality.
+```
+
+> **Note:** GPU warnings are expected for CPU-only setups. Use `loclaude init --no-gpu` to configure CPU mode.
 
 ## Installing Prerequisites
 
@@ -127,7 +154,9 @@ brew install --cask docker
 
 <!-- tabs:end -->
 
-### NVIDIA Container Toolkit
+### NVIDIA Container Toolkit (GPU Mode Only)
+
+Skip this section if using CPU-only mode.
 
 ```bash
 # Configure the repository
@@ -145,6 +174,12 @@ sudo nvidia-ctk runtime configure --runtime=docker
 sudo systemctl restart docker
 ```
 
+Verify GPU access:
+
+```bash
+docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi
+```
+
 ### Claude Code
 
 ```bash
@@ -154,3 +189,21 @@ npm install -g @anthropic-ai/claude-code
 ## Next Steps
 
 Now that loclaude is installed, continue to the [Quick Start](quickstart.md) guide.
+
+### GPU Users
+
+```bash
+loclaude init          # Auto-detects GPU
+loclaude docker-up
+loclaude models-pull qwen3-coder:30b
+loclaude run
+```
+
+### CPU-Only Users
+
+```bash
+loclaude init --no-gpu
+loclaude docker-up
+loclaude models-pull qwen2.5-coder:7b
+loclaude run
+```

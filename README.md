@@ -7,6 +7,7 @@ loclaude provides a CLI to:
 - Manage Ollama + Open WebUI Docker containers
 - Pull and manage Ollama models
 - Scaffold new projects with opinionated Docker configs
+- **Supports both GPU and CPU-only modes**
 
 ## Installation
 
@@ -21,8 +22,16 @@ bun install -g loclaude
 ## Prerequisites
 
 - [Docker](https://docs.docker.com/get-docker/) with Docker Compose v2
-- [NVIDIA GPU](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) with drivers and container toolkit
 - [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) installed (`npm install -g @anthropic-ai/claude-code`)
+
+### For GPU Mode (Recommended)
+
+- [NVIDIA GPU](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) with drivers
+- [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
+
+### CPU-Only Mode
+
+No GPU required! Use `--no-gpu` flag during init for systems without NVIDIA GPUs.
 
 Check your setup with:
 
@@ -32,8 +41,10 @@ loclaude doctor
 
 ## Quick Start
 
+### With GPU (Auto-detected)
+
 ```bash
-# Initialize a new project with Docker configs
+# Initialize a new project (auto-detects GPU)
 loclaude init
 
 # Start Ollama + Open WebUI containers
@@ -42,9 +53,47 @@ loclaude docker-up
 # Pull a model
 loclaude models-pull qwen3-coder:30b
 
-# Run Claude Code with local LLM (interactive model selection)
+# Run Claude Code with local LLM
 loclaude run
 ```
+
+### CPU-Only Mode
+
+```bash
+# Initialize without GPU support
+loclaude init --no-gpu
+
+# Start containers
+loclaude docker-up
+
+# Pull a CPU-optimized model
+loclaude models-pull qwen2.5-coder:7b
+
+# Run Claude Code
+loclaude run
+```
+
+## Features
+
+### Automatic Model Loading
+
+When you run `loclaude run`, it automatically:
+1. Checks if your selected model is loaded in Ollama
+2. If not loaded, warms up the model with a 10-minute keep-alive
+3. Shows `[loaded]` indicator in model selection for running models
+
+### Colorful CLI Output
+
+All commands feature colorful, themed output for better readability:
+- Status indicators with colors (green/yellow/red)
+- Model sizes color-coded by magnitude
+- Clear headers and structured output
+
+### GPU Auto-Detection
+
+`loclaude init` automatically detects NVIDIA GPUs and configures the appropriate Docker setup:
+- **GPU detected**: Uses `runtime: nvidia` and CUDA-enabled images
+- **No GPU**: Uses CPU-only configuration with smaller default models
 
 ## Commands
 
@@ -59,7 +108,9 @@ loclaude run -- --help          # Pass args to claude
 ### Project Setup
 
 ```bash
-loclaude init                   # Scaffold docker-compose.yml, config, mise.toml
+loclaude init                   # Auto-detect GPU, scaffold project
+loclaude init --gpu             # Force GPU mode
+loclaude init --no-gpu          # Force CPU-only mode
 loclaude init --force           # Overwrite existing files
 loclaude init --no-webui        # Skip Open WebUI in compose file
 ```
@@ -93,6 +144,24 @@ loclaude doctor                 # Check prerequisites
 loclaude config                 # Show current configuration
 loclaude config-paths           # Show config file search paths
 ```
+
+## Recommended Models
+
+### For GPU (16GB+ VRAM)
+
+| Model | Size | Use Case |
+|-------|------|----------|
+| `qwen3-coder:30b` | ~17 GB | Best coding performance |
+| `deepseek-coder:33b` | ~18 GB | Code understanding |
+| `gpt-oss:20b` | ~13 GB | General purpose |
+
+### For CPU or Limited VRAM
+
+| Model | Size | Use Case |
+|-------|------|----------|
+| `qwen2.5-coder:7b` | ~4 GB | Coding on CPU |
+| `llama3.2:3b` | ~2 GB | Fast, simple tasks |
+| `gemma2:9b` | ~5 GB | General purpose |
 
 ## Configuration
 
@@ -162,7 +231,7 @@ After running `loclaude init`:
 ├── .loclaude/
 │   └── config.json        # Loclaude configuration
 ├── models/                # Ollama model storage (gitignored)
-├── docker-compose.yml     # Container definitions
+├── docker-compose.yml     # Container definitions (GPU or CPU mode)
 ├── mise.toml              # Task runner configuration
 └── README.md
 ```
@@ -189,8 +258,8 @@ loclaude doctor
 
 This verifies:
 - Docker and Docker Compose installation
-- NVIDIA GPU detection
-- NVIDIA Container Toolkit
+- NVIDIA GPU detection (optional)
+- NVIDIA Container Toolkit (optional)
 - Claude Code CLI
 - Ollama API connectivity
 
@@ -214,6 +283,23 @@ If Claude Code can't connect to Ollama:
 1. Verify Ollama is running: `loclaude docker-status`
 2. Check the API: `curl http://localhost:11434/api/tags`
 3. Verify your config: `loclaude config`
+
+### GPU Not Detected
+
+If you have a GPU but it's not detected:
+
+1. Check NVIDIA drivers: `nvidia-smi`
+2. Test Docker GPU access: `docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi`
+3. Install NVIDIA Container Toolkit if missing
+4. Re-run `loclaude init --gpu` to force GPU mode
+
+### Running on CPU
+
+If inference is slow on CPU:
+
+1. Use smaller, quantized models: `qwen2.5-coder:7b`, `llama3.2:3b`
+2. Expect ~10-20 tokens/sec on modern CPUs
+3. Consider cloud models via Ollama: `glm-4.7:cloud`
 
 ## Development
 

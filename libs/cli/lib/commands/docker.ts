@@ -6,6 +6,7 @@ import { existsSync } from 'fs';
 import path, { join, isAbsolute } from 'path';
 import { fileURLToPath } from 'url';
 import { getComposeFile } from '../config';
+import { success, error, info, dim, cyan, url, cmd, loading, done } from '../output';
 import { spawn } from '../spawn';
 
 /**
@@ -73,13 +74,13 @@ async function runCompose(args: string[], options: DockerOptions = {}): Promise<
   const composeFile = options.file ?? findComposeFile();
 
   if (!composeFile) {
-    console.error('Error: No docker-compose.yml found');
-    console.error("Run 'loclaude init' to create one, or specify --file");
+    console.log(error('No docker-compose.yml found'));
+    console.log(dim(`  Run ${cmd('loclaude init')} to create one, or specify --file`));
     return 1;
   }
 
-  const cmd = [...getComposeCommand(), '-f', composeFile, ...args];
-  return spawn(cmd);
+  const cmd_args = [...getComposeCommand(), '-f', composeFile, ...args];
+  return spawn(cmd_args);
 }
 
 export async function dockerUp(options: DockerOptions = {}): Promise<void> {
@@ -88,31 +89,38 @@ export async function dockerUp(options: DockerOptions = {}): Promise<void> {
     args.push('-d');
   }
 
-  console.log('Starting containers...\n');
+  console.log(info('Starting containers...'));
+  console.log('');
   const exitCode = await runCompose(args, options);
 
   if (exitCode === 0) {
-    console.log('\n✓ Containers started');
-    console.log('\nService URLs:');
-    console.log('  Ollama API:  http://localhost:11434');
-    console.log('  Open WebUI:  http://localhost:3000');
+    console.log('');
+    console.log(success('Containers started'));
+    console.log('');
+    console.log(cyan('Service URLs:'));
+    console.log(`  Ollama API:  ${url('http://localhost:11434')}`);
+    console.log(`  Open WebUI:  ${url('http://localhost:3000')}`);
   }
 
   process.exit(exitCode);
 }
 
 export async function dockerDown(options: DockerOptions = {}): Promise<void> {
-  console.log('Stopping containers...\n');
+  console.log(info('Stopping containers...'));
+  console.log('');
   const exitCode = await runCompose(['down'], options);
 
   if (exitCode === 0) {
-    console.log('\n✓ Containers stopped');
+    console.log('');
+    console.log(success('Containers stopped'));
   }
 
   process.exit(exitCode);
 }
 
 export async function dockerStatus(options: DockerOptions = {}): Promise<void> {
+  console.log(info('Container status:'));
+  console.log('');
   const exitCode = await runCompose(['ps'], options);
   process.exit(exitCode);
 }
@@ -128,18 +136,24 @@ export async function dockerLogs(
 
   if (options.service) {
     args.push(options.service);
+    console.log(info(`Logs for ${cyan(options.service)}:`));
+  } else {
+    console.log(info('Container logs:'));
   }
+  console.log('');
 
   const exitCode = await runCompose(args, options);
   process.exit(exitCode);
 }
 
 export async function dockerRestart(options: DockerOptions = {}): Promise<void> {
-  console.log('Restarting containers...\n');
+  console.log(info('Restarting containers...'));
+  console.log('');
   const exitCode = await runCompose(['restart'], options);
 
   if (exitCode === 0) {
-    console.log('\n✓ Containers restarted');
+    console.log('');
+    console.log(success('Containers restarted'));
   }
 
   process.exit(exitCode);
@@ -153,11 +167,11 @@ export async function dockerExec(
   const composeFile = options.file ?? findComposeFile();
 
   if (!composeFile) {
-    console.error('Error: No docker-compose.yml found');
+    console.log(error('No docker-compose.yml found'));
     return 1;
   }
 
-  const cmd = [...getComposeCommand(), '-f', composeFile, 'exec', service, ...command];
+  const cmd_args = [...getComposeCommand(), '-f', composeFile, 'exec', service, ...command];
 
-  return spawn(cmd);
+  return spawn(cmd_args);
 }

@@ -3,6 +3,7 @@
  */
 
 import { getOllamaUrl } from '../config';
+import { statusLine, header, success, warn, error, hint, green, yellow, red, dim } from '../output';
 import { commandExists, getCommandVersion, spawnCapture } from '../spawn';
 
 interface CheckResult {
@@ -171,36 +172,18 @@ async function checkOllamaConnection(): Promise<CheckResult> {
 }
 
 function formatCheck(check: CheckResult): string {
-  const icons = {
-    ok: '✓',
-    warning: '⚠',
-    error: '✗'
-  };
-
-  const colors = {
-    ok: '\x1b[32m',
-    warning: '\x1b[33m',
-    error: '\x1b[31m'
-  };
-
-  const reset = '\x1b[0m';
-  const icon = icons[check.status];
-  const color = colors[check.status];
-
-  let line = `${color}${icon}${reset} ${check.name}: ${check.message}`;
-  if (check.version) {
-    line += ` (${check.version})`;
-  }
+  let line = statusLine(check.status, check.name, check.message, check.version);
 
   if (check.hint) {
-    line += `\n    ${check.hint}`;
+    line += `\n    ${dim('→')} ${dim(check.hint)}`;
   }
 
   return line;
 }
 
 export async function doctor(): Promise<void> {
-  console.log('Checking system requirements...\n');
+  header('System Health Check');
+  console.log('');
 
   const checks: CheckResult[] = await Promise.all([
     checkDocker(),
@@ -221,13 +204,22 @@ export async function doctor(): Promise<void> {
   console.log('');
 
   if (errors.length > 0) {
-    console.log(`\x1b[31m${errors.length} error(s) found.\x1b[0m Fix these before proceeding.`);
+    console.log(red(`${errors.length} error(s) found.`) + ' Fix these before proceeding.');
     process.exit(1);
   } else if (warnings.length > 0) {
-    console.log(
-      `\x1b[33m${warnings.length} warning(s).\x1b[0m loclaude may work with limited functionality.`
-    );
+    console.log(yellow(`${warnings.length} warning(s).`) + ' loclaude may work with limited functionality.');
   } else {
-    console.log('\x1b[32mAll checks passed!\x1b[0m Ready to use loclaude.');
+    console.log(green('All checks passed!') + ' Ready to use loclaude.');
   }
+}
+
+/**
+ * Check if NVIDIA GPU is available (exported for use by init command)
+ */
+export async function hasNvidiaGpu(): Promise<boolean> {
+  const exists = await commandExists('nvidia-smi');
+  if (!exists) return false;
+
+  const result = await spawnCapture(['nvidia-smi', '--query-gpu=name', '--format=csv,noheader']);
+  return result.exitCode === 0 && Boolean(result.stdout?.trim());
 }
