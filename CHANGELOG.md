@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.1-alpha.3] - 2025-01-21
+
+### Added
+
+- Adds support for CPU Only Ollama Hosts
+- Adds `auto-start` model enablement to `x` command
+
+### Changed
+
+- Bumps `@loclaude-internal/cli` dependency reference from `v0.0.1-alpha.1` to pinned version `v0.0.1-alpha.2`
+- Modifies documentation on output files from `init` command
+
 ## [0.0.1-alpha.2] - 2025-01-20
 
 ### Changed
