@@ -1,6 +1,6 @@
 {
   "name": "@loclaude-internal/cli",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1-alpha.2",
   "description": "An internal @loclaude-internal package that supplies common CLI utilities.",
   "module": "dist/index.js",
   "type": "module",
@@ -16,11 +16,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nicholasgalante1997/docker-ollama.git"
+    "url": "git+https://github.com/nicholasgalante1997/loclaude.git"
   },
-  "homepage": "https://github.com/nicholasgalante1997/docker-ollama#readme",
+  "homepage": "https://github.com/nicholasgalante1997/loclaude.git#readme",
   "bugs": {
-    "url": "https://github.com/nicholasgalante1997/docker-ollama/issues"
+    "url": "https://github.com/nicholasgalante1997/loclaude.git/issues"
   },
   "publishConfig": {
     "access": "public",
@@ -46,6 +46,7 @@
   },
   "files": [
     "dist",
+    "CHANGELOG.md",
     "LICENSE",
     "README.md"
   ],
