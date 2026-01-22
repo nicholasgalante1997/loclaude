@@ -1,6 +1,6 @@
 {
   "name": "loclaude",
-  "version": "0.0.1-alpha.3",
+  "version": "0.0.2",
   "description": "Claude Code with local Ollama LLMs - Zero API costs, no rate limits, complete privacy",
   "type": "module",
   "license": "./LICENSE",
@@ -79,7 +79,7 @@
     "release:beta": "bun run build && npm publish --tag beta --access public"
   },
   "dependencies": {
-    "@loclaude-internal/cli": "^0.0.1-alpha.2"
+    "@loclaude-internal/cli": "^0.0.2"
   },
   "peerDependencies": {
     "typescript": "^5"
