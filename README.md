@@ -4,7 +4,9 @@
 
 **Claude Code with Local LLMs**
 
-Stop burning through Claude API usage limits. Stop contributing through either passive observation or donation to the wailing stuck pig that is the AI Free Market in 2026. Run Claude Code's powerful agentic workflow with local Ollama models on your own hardware.
+Stop burning through Claude API usage limits. Run Claude Code's powerful agentic workflow with local Ollama models on your own hardware.
+
+> **Requires ollama v0.14.2 or higher**
 
 **Zero API costs. No rate limits. Complete privacy.**
 
