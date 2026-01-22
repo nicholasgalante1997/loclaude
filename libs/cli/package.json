@@ -1,6 +1,6 @@
 {
   "name": "@loclaude-internal/cli",
-  "version": "0.0.1-alpha.2",
+  "version": "0.0.2",
   "description": "An internal @loclaude-internal package that supplies common CLI utilities.",
   "module": "dist/index.js",
   "type": "module",
@@ -25,7 +25,7 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/",
-    "tag": "alpha"
+    "tag": "latest"
   },
   "exports": {
     ".": {
