@@ -53,8 +53,8 @@ This is a release candidate. The API and command structure may change before 1.0
 
 ## Links
 
-- [GitHub Releases](https://github.com/nicholasgalante1997/docker-ollama/releases)
+- [GitHub Releases](https://github.com/nicholasgalante1997/loclaude/releases)
 - [npm Package](https://www.npmjs.com/package/loclaude)
 
-[Unreleased]: https://github.com/nicholasgalante1997/docker-ollama/compare/v0.0.1-rc.1...HEAD
-[0.0.1-rc.1]: https://github.com/nicholasgalante1997/docker-ollama/releases/tag/v0.0.1-rc.1
+[Unreleased]: https://github.com/nicholasgalante1997/loclaude/compare/v0.0.1-rc.1...HEAD
+[0.0.1-rc.1]: https://github.com/nicholasgalante1997/loclaude/releases/tag/v0.0.1-rc.1

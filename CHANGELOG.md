@@ -63,5 +63,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This is an alpha release. The API and command structure may change before 1.0.
 
-[Unreleased]: https://github.com/nicholasgalante1997/docker-ollama/compare/v0.0.1-rc.1...HEAD
-[0.0.1-alpha.1]: https://github.com/nicholasgalante1997/docker-ollama/releases/tag/v0.0.1-alpha.1
+[Unreleased]: https://github.com/nicholasgalante1997/loclaude/compare/v0.0.1-rc.1...HEAD
+[0.0.1-alpha.1]: https://github.com/nicholasgalante1997/loclaude/releases/tag/v0.0.1-alpha.1

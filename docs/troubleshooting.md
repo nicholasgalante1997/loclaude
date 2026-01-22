@@ -25,6 +25,7 @@ loclaude config
 ### "Could not connect to Ollama"
 
 **Symptoms:**
+
 ```
 Error: Could not connect to Ollama at http://localhost:11434
 Make sure Ollama is running: loclaude docker-up
@@ -33,21 +34,25 @@ Make sure Ollama is running: loclaude docker-up
 **Solutions:**
 
 1. Start the containers:
+
    ```bash
    loclaude docker-up
    ```
 
 2. Check container status:
+
    ```bash
    loclaude docker-status
    ```
 
 3. Verify the API is accessible:
+
    ```bash
    curl http://localhost:11434/api/tags
    ```
 
 4. Check if the port is in use:
+
    ```bash
    lsof -i :11434
    ```
@@ -59,11 +64,13 @@ Make sure Ollama is running: loclaude docker-up
 **Solutions:**
 
 1. Verify Ollama URL in config:
+
    ```bash
    loclaude config
    ```
 
 2. Update if needed:
+
    ```bash
    export OLLAMA_URL="http://correct-host:11434"
    ```
@@ -73,6 +80,7 @@ Make sure Ollama is running: loclaude docker-up
 **Cause:** No models have been pulled yet.
 
 **Solution:**
+
 ```bash
 loclaude models-pull qwen3-coder:30b
 ```
@@ -82,6 +90,7 @@ loclaude models-pull qwen3-coder:30b
 ### Containers Won't Start
 
 **Check logs:**
+
 ```bash
 loclaude docker-logs
 ```
@@ -89,6 +98,7 @@ loclaude docker-logs
 **Common causes:**
 
 1. **Port already in use:**
+
    ```bash
    # Find what's using the port
    lsof -i :11434
@@ -97,11 +107,13 @@ loclaude docker-logs
    ```
 
 2. **Docker not running:**
+
    ```bash
    sudo systemctl start docker
    ```
 
 3. **Insufficient permissions:**
+
    ```bash
    sudo usermod -aG docker $USER
    newgrp docker
@@ -110,11 +122,13 @@ loclaude docker-logs
 ### Container Keeps Restarting
 
 **Check health status:**
+
 ```bash
 docker inspect ollama --format='{{.State.Health.Status}}'
 ```
 
 **View health check logs:**
+
 ```bash
 docker inspect ollama --format='{{json .State.Health}}' | jq
 ```
@@ -130,6 +144,7 @@ docker inspect ollama --format='{{json .State.Health}}' | jq
 **Cause:** NVIDIA Container Toolkit not installed or configured.
 
 **Solution:**
+
 ```bash
 # Install toolkit
 sudo apt-get install -y nvidia-container-toolkit
@@ -147,6 +162,7 @@ docker run --rm --gpus all nvidia/cuda:11.0-base nvidia-smi
 ### "No GPU detected"
 
 **Check GPU visibility:**
+
 ```bash
 nvidia-smi
 ```
@@ -154,12 +170,14 @@ nvidia-smi
 **If not visible:**
 
 1. Install/update NVIDIA drivers:
+
    ```bash
    sudo ubuntu-drivers autoinstall
    sudo reboot
    ```
 
 2. Verify driver is loaded:
+
    ```bash
    lsmod | grep nvidia
    ```
@@ -167,6 +185,7 @@ nvidia-smi
 ### "CUDA out of memory"
 
 **Symptoms:**
+
 ```
 CUDA out of memory. Tried to allocate X GiB
 ```
@@ -174,6 +193,7 @@ CUDA out of memory. Tried to allocate X GiB
 **Solutions:**
 
 1. Use a smaller model:
+
    ```bash
    loclaude models-pull llama3.2:3b
    loclaude run -m llama3.2:3b
@@ -182,6 +202,7 @@ CUDA out of memory. Tried to allocate X GiB
 2. Close other GPU applications
 
 3. Use quantized models:
+
    ```bash
    loclaude models-pull codellama:13b-q4_k_m
    ```
@@ -207,6 +228,7 @@ CUDA out of memory. Tried to allocate X GiB
 **Cause:** Model hasn't been pulled.
 
 **Solution:**
+
 ```bash
 # List available models
 loclaude models
@@ -230,11 +252,13 @@ loclaude models-pull <model-name>
 **Solutions:**
 
 1. Use a coding-specific model:
+
    ```bash
    loclaude models-pull qwen3-coder:30b
    ```
 
 2. Use instruction-tuned variants:
+
    ```bash
    loclaude models-pull codellama:13b-instruct
    ```
@@ -246,6 +270,7 @@ loclaude models-pull <model-name>
 ### "Claude Code not found"
 
 **Solution:**
+
 ```bash
 npm install -g @anthropic-ai/claude-code
 ```
@@ -253,6 +278,7 @@ npm install -g @anthropic-ai/claude-code
 ### Claude Code Crashes
 
 **Check Claude Code logs:**
+
 ```bash
 loclaude run -- --verbose
 ```
@@ -260,6 +286,7 @@ loclaude run -- --verbose
 **Common fixes:**
 
 1. Update Claude Code:
+
    ```bash
    npm update -g @anthropic-ai/claude-code
    ```
@@ -271,11 +298,13 @@ loclaude run -- --verbose
 ### Config Not Loading
 
 **Check paths:**
+
 ```bash
 loclaude config-paths
 ```
 
 **Verify JSON syntax:**
+
 ```bash
 cat .loclaude/config.json | jq .
 ```
@@ -283,12 +312,14 @@ cat .loclaude/config.json | jq .
 ### Environment Variables Not Working
 
 **Verify they're set:**
+
 ```bash
 echo $OLLAMA_URL
 echo $OLLAMA_MODEL
 ```
 
 **Check effective config:**
+
 ```bash
 loclaude config
 ```
@@ -298,7 +329,7 @@ loclaude config
 If you can't resolve an issue:
 
 1. **Search existing issues:**
-   [GitHub Issues](https://github.com/nicholasgalante1997/docker-ollama/issues)
+   [GitHub Issues](https://github.com/nicholasgalante1997/loclaude/issues)
 
 2. **Create a new issue** with:
    - Output of `loclaude doctor`
@@ -307,6 +338,7 @@ If you can't resolve an issue:
    - Steps to reproduce
 
 3. **Include system info:**
+
    ```bash
    uname -a
    docker --version

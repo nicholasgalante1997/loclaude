@@ -38,6 +38,7 @@ GET /api/tags
 ```
 
 **Response:**
+
 ```json
 {
   "models": [
@@ -57,6 +58,7 @@ POST /api/generate
 ```
 
 **Request:**
+
 ```json
 {
   "model": "qwen3-coder:30b",
@@ -107,6 +109,8 @@ interface LoclaudeConfig {
 ## Spawn API
 
 Cross-runtime process spawning that works with both Bun and Node.js.
+
+> loclaude passes whatever you pass to it directly to shell invocation. we do not attempt to sanitize for you, we aren't your mother. we make the assumption that you're not a bad actor abusing your own machine. we do not pipe telemetry or usage data. your blast radius is whatever you run loclaude on. with that, don't ever pass unsanitized input that you don't understand to any tool unless you are prepared to accept unknown consequences.  
 
 ### spawn()
 
@@ -199,7 +203,7 @@ npm pack
 
 ## Contributing
 
-See the [GitHub repository](https://github.com/nicholasgalante1997/docker-ollama/loclaude) for:
+See the [GitHub repository](https://github.com/nicholasgalante1997/loclaude) for:
 
 - Contribution guidelines
 - Development setup

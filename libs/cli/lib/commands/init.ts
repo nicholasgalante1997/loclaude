@@ -439,7 +439,7 @@ run = "loclaude config"
 // README.md template with comprehensive documentation
 const README_TEMPLATE = `# Project Name
 
-> Powered by [loclaude](https://github.com/nicholasgalante1997/docker-ollama) - Run Claude Code with local Ollama LLMs
+> Powered by [loclaude](https://github.com/nicholasgalante1997/loclaude) - Run Claude Code with local Ollama LLMs
 
 ## Prerequisites
 
@@ -586,7 +586,7 @@ Project-specific instructions for Claude Code.
 
 ## Project Overview
 
-This project uses [loclaude](https://github.com/nicholasgalante1997/docker-ollama) to run Claude Code with local Ollama LLMs.
+This project uses [loclaude](https://github.com/nicholasgalante1997/loclaude) to run Claude Code with local Ollama LLMs.
 
 ## Quick Reference
 

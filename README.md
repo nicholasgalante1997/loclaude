@@ -1,13 +1,40 @@
+<div align="center">
+
 # loclaude
 
-Run [Claude Code](https://docs.anthropic.com/en/docs/claude-code) with local [Ollama](https://ollama.ai/) LLMs.
+**Claude Code with Local LLMs**
 
-loclaude provides a CLI to:
-- Launch Claude Code sessions connected to your local Ollama instance
-- Manage Ollama + Open WebUI Docker containers
-- Pull and manage Ollama models
-- Scaffold new projects with opinionated Docker configs
-- **Supports both GPU and CPU-only modes**
+Stop burning through Claude API usage limits. Stop contributing through either passive observation or donation to the wailing stuck pig that is the AI Free Market in 2026. Run Claude Code's powerful agentic workflow with local Ollama models on your own hardware.
+
+**Zero API costs. No rate limits. Complete privacy.**
+
+[![npm version](https://img.shields.io/npm/v/loclaude.svg)](https://www.npmjs.com/package/loclaude)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+[Quick Start](#quick-start-5-minutes) • [Why loclaude?](#why-loclaude) • [Installation](#installation) • [FAQ](#faq)
+
+</div>
+
+---
+
+## Why loclaude?
+
+### Real Value
+
+- **No Rate Limits**: Use Claude Code as much as you want
+- **Privacy**: Your code never leaves your machine
+- **Cost Control**: Use your own hardware, pay for electricity not tokens
+- **Offline Capable**: Work without internet (after model download)
+- **GPU or CPU**: Works with NVIDIA GPUs or CPU-only systems
+
+### What to Expect
+
+loclaude provides:
+
+- One-command setup for Ollama + Open WebUI containers
+- Smart model management with auto-loading
+- GPU auto-detection with CPU fallback
+- Project scaffolding with Docker configs
 
 ## Installation
 
@@ -15,62 +42,65 @@ loclaude provides a CLI to:
 # With npm (requires Node.js 18+)
 npm install -g loclaude
 
-# With bun (recommended)
-bun install -g loclaude
+# With bun (faster, recommended)
+bun install -g loclaude # use bun-loclaude for commands
 ```
+
+### vs. Other Solutions
+
+| Solution | Cost | Speed | Privacy | Limits |
+|----------|------|-------|---------|--------|
+| **loclaude** | Free after setup | Fast (GPU) | 100% local | None |
+| Claude API/Web | $20-200+/month | Fast | Cloud-based | Rate limited |
+| GitHub Copilot | $10-20/month | Fast | Cloud-based | Context limited |
+| Cursor/Codeium | $20+/month | Fast | Cloud-based | Usage limits |
+
+loclaude gives you the utility of Ollama with the convenience of a managed solution for claude code integration.
+
+## Quick Start (5 Minutes)
+
+```bash
+# 1. Install loclaude
+npm install -g loclaude
+
+# 2. Install Claude Code (if you haven't already)
+npm install -g @anthropic-ai/claude-code
+
+# 3. Setup your project (auto-detects GPU)
+loclaude init
+
+# 4. Start Ollama container
+loclaude docker-up
+
+# 5. Pull a model (choose based on your hardware)
+loclaude models-pull qwen3-coder:30b    # GPU with 16GB+ VRAM
+# OR
+loclaude models-pull qwen2.5-coder:7b   # CPU or limited VRAM
+
+# 6. Run Claude Code with unlimited local LLM
+loclaude run
+```
+
+That's it! You now have unlimited Claude Code sessions with local models.
 
 ## Prerequisites
 
+**Required:**
+
 - [Docker](https://docs.docker.com/get-docker/) with Docker Compose v2
-- [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) installed (`npm install -g @anthropic-ai/claude-code`)
+- [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) (`npm install -g @anthropic-ai/claude-code`)
 
-### For GPU Mode (Recommended)
+**Optional (for GPU acceleration):**
 
-- [NVIDIA GPU](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) with drivers
+- NVIDIA GPU with 16GB+ VRAM (RTX 3090, 4090, A5000, etc.)
 - [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
 
-### CPU-Only Mode
+**CPU-only systems work fine!** Use `--no-gpu` flag during init and smaller models.
 
-No GPU required! Use `--no-gpu` flag during init for systems without NVIDIA GPUs.
-
-Check your setup with:
+**Check your setup:**
 
 ```bash
 loclaude doctor
-```
-
-## Quick Start
-
-### With GPU (Auto-detected)
-
-```bash
-# Initialize a new project (auto-detects GPU)
-loclaude init
-
-# Start Ollama + Open WebUI containers
-loclaude docker-up
-
-# Pull a model
-loclaude models-pull qwen3-coder:30b
-
-# Run Claude Code with local LLM
-loclaude run
-```
-
-### CPU-Only Mode
-
-```bash
-# Initialize without GPU support
-loclaude init --no-gpu
-
-# Start containers
-loclaude docker-up
-
-# Pull a CPU-optimized model
-loclaude models-pull qwen2.5-coder:7b
-
-# Run Claude Code
-loclaude run
 ```
 
 ## Features
@@ -78,20 +108,15 @@ loclaude run
 ### Automatic Model Loading
 
 When you run `loclaude run`, it automatically:
+
 1. Checks if your selected model is loaded in Ollama
-2. If not loaded, warms up the model with a 10-minute keep-alive
+2. If not loaded, warms up the model with a 10-minute keep-alive (Configurable through env vars)
 3. Shows `[loaded]` indicator in model selection for running models
-
-### Colorful CLI Output
-
-All commands feature colorful, themed output for better readability:
-- Status indicators with colors (green/yellow/red)
-- Model sizes color-coded by magnitude
-- Clear headers and structured output
 
 ### GPU Auto-Detection
 
 `loclaude init` automatically detects NVIDIA GPUs and configures the appropriate Docker setup:
+
 - **GPU detected**: Uses `runtime: nvidia` and CUDA-enabled images
 - **No GPU**: Uses CPU-only configuration with smaller default models
 
@@ -147,21 +172,22 @@ loclaude config-paths           # Show config file search paths
 
 ## Recommended Models
 
-### For GPU (16GB+ VRAM)
+### For GPU (16GB+ VRAM) - Best Experience
 
-| Model | Size | Use Case |
-|-------|------|----------|
-| `qwen3-coder:30b` | ~17 GB | Best coding performance |
-| `deepseek-coder:33b` | ~18 GB | Code understanding |
-| `gpt-oss:20b` | ~13 GB | General purpose |
+| Model | Size | Speed | Quality | Best For |
+|-------|------|-------|---------|----------|
+| `qwen3-coder:30b` | ~17 GB | ~50-100 tok/s | Excellent | **Most coding tasks, refactoring, debugging** |
+| `deepseek-coder:33b` | ~18 GB | ~40-80 tok/s | Excellent | Code understanding, complex logic |
 
-### For CPU or Limited VRAM
+**Recommendation:** Start with `qwen3-coder:30b` for the best balance of speed and quality.
 
-| Model | Size | Use Case |
-|-------|------|----------|
-| `qwen2.5-coder:7b` | ~4 GB | Coding on CPU |
-| `llama3.2:3b` | ~2 GB | Fast, simple tasks |
-| `gemma2:9b` | ~5 GB | General purpose |
+### For CPU or Limited VRAM (<16GB) - Still Productive
+
+| Model | Size | Speed | Quality | Best For |
+|-------|------|-------|---------|----------|
+| `qwen2.5-coder:7b` | ~4 GB | ~10-20 tok/s | Good | **Code completion, simple refactoring** |
+| `deepseek-coder:6.7b` | ~4 GB | ~10-20 tok/s | Good | Understanding existing code |
+| `llama3.2:3b` | ~2 GB | ~15-30 tok/s | Fair | Quick edits, file operations |
 
 ## Configuration
 
@@ -217,8 +243,8 @@ When containers are running:
 
 | Service | URL | Description |
 |---------|-----|-------------|
-| Ollama API | http://localhost:11434 | LLM inference API |
-| Open WebUI | http://localhost:3000 | Chat interface |
+| Ollama API | <http://localhost:11434> | LLM inference API |
+| Open WebUI | <http://localhost:3000> | Chat interface |
 
 ## Project Structure
 
@@ -248,6 +274,30 @@ mise run pull <model>    # loclaude models-pull <model>
 mise run doctor          # loclaude doctor
 ```
 
+## FAQ
+
+### Is this really unlimited?
+
+Yes! Once you have models downloaded, you can run as many sessions as you want with zero additional cost.
+
+### How does the quality compare to Claude API?
+
+30B parameter models (qwen3-coder:30b) are comparable to GPT-3.5 and work okay for most coding tasks. Larger models have a bit more success. Claude API is still better, but this allows for continuing work when you have hit that pesky usage limit.
+
+### Do I need a GPU?
+
+No, but highly recommended. CPU-only mode works with smaller models at ~10-20 tokens/sec. A GPU (16GB+ VRAM) gives you 50-100 tokens/sec with larger, better models.
+
+### What's the catch?
+
+- Initial setup takes 5-10 minutes
+- Model downloads are large (4-20GB)
+- GPU hardware investment if you don't have one (~$500-1500 used)
+
+### Can I use this with the Claude API too?
+
+Absolutely! Keep using Claude API for critical tasks, use loclaude for everything else to save money and avoid limits.
+
 ## Troubleshooting
 
 ### Check System Requirements
@@ -257,6 +307,7 @@ loclaude doctor
 ```
 
 This verifies:
+
 - Docker and Docker Compose installation
 - NVIDIA GPU detection (optional)
 - NVIDIA Container Toolkit (optional)
@@ -301,12 +352,45 @@ If inference is slow on CPU:
 2. Expect ~10-20 tokens/sec on modern CPUs
 3. Consider cloud models via Ollama: `glm-4.7:cloud`
 
+## Contributing
+
+loclaude is open source and welcomes contributions! Here's how you can help:
+
+### Share Your Experience
+
+- Star the repo if loclaude saves you money or rate limits
+- Share your setup and model recommendations
+- Write about your experience on dev.to, Twitter, or your blog
+- Report bugs and request features via GitHub Issues
+
+### Code Contributions
+
+- Fix bugs or add features (see open issues)
+- Improve documentation or examples
+- Add support for new model providers
+- Optimize model loading and performance
+
+### Spread the Word
+
+- Post on r/LocalLLaMA, r/selfhosted, r/ClaudeAI
+- Share in Discord/Slack dev communities
+- Help others troubleshoot in GitHub Discussions
+
+Every star, issue report, and shared experience helps more developers discover unlimited local Claude Code.
+
+## Getting Help
+
+- **Issues/Bugs**: [GitHub Issues](https://github.com/nicholasgalante1997/loclaude/issues)
+- **Questions**: [GitHub Discussions](https://github.com/nicholasgalante1997/loclaude/discussions)
+- **Documentation**: Run `loclaude --help` or check this README
+- **System Check**: Run `loclaude doctor` to diagnose problems
+
 ## Development
 
 ### Building from Source
 
 ```bash
-git clone https://github.com/nicholasgalante1997/docker-ollama.git loclaude
+git clone https://github.com/nicholasgalante1997/loclaude.git loclaude
 cd loclaude
 bun install
 bun run build

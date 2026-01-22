@@ -32,6 +32,8 @@ Before installing loclaude, ensure you have the following:
 
 ## Install loclaude
 
+> Bun is a first class citizen here, the future is now old man!
+
 <!-- tabs:start -->
 
 #### **bun**

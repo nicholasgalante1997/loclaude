@@ -10,4 +10,4 @@
 - Cross-runtime support
 
 [Get Started](getting-started.md)
-[GitHub](https://github.com/nicholasgalante1997/docker-ollama)
+[GitHub](https://github.com/nicholasgalante1997/loclaude)

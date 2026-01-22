@@ -1,17 +1,27 @@
 {
   "name": "loclaude",
   "version": "0.0.1-alpha.3",
-  "description": "Run Claude Code with local Ollama LLMs",
+  "description": "Claude Code with local Ollama LLMs - Zero API costs, no rate limits, complete privacy",
   "type": "module",
   "license": "./LICENSE",
   "keywords": [
     "claude",
+    "claude-code",
     "ollama",
     "llm",
+    "local-llm",
+    "ai-coding",
+    "self-hosted",
     "cli",
     "ai",
     "open-webui",
-    "claude-code"
+    "docker",
+    "nvidia",
+    "gpu",
+    "offline-ai",
+    "privacy",
+    "cost-free",
+    "unlimited"
   ],
   "contributors": [
     {
@@ -22,11 +32,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nicholasgalante1997/docker-ollama.git"
+    "url": "git+https://github.com/nicholasgalante1997/loclaude.git"
   },
-  "homepage": "https://github.com/nicholasgalante1997/docker-ollama#readme",
+  "homepage": "https://github.com/nicholasgalante1997/loclaude#readme",
   "bugs": {
-    "url": "https://github.com/nicholasgalante1997/docker-ollama/issues"
+    "url": "https://github.com/nicholasgalante1997/loclaude/issues"
   },
   "publishConfig": {
     "access": "public",
