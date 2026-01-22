@@ -171,6 +171,100 @@ async function checkOllamaConnection(): Promise<CheckResult> {
   }
 }
 
+const MIN_OLLAMA_VERSION = '0.14.2';
+
+/**
+ * Parse a semver string into comparable parts
+ */
+function parseVersion(version: string): { major: number; minor: number; patch: number } | null {
+  const match = version.match(/(\d+)\.(\d+)\.(\d+)/);
+  if (!match || !match[1] || !match[2] || !match[3]) return null;
+  return {
+    major: parseInt(match[1], 10),
+    minor: parseInt(match[2], 10),
+    patch: parseInt(match[3], 10)
+  };
+}
+
+/**
+ * Compare two semver versions
+ * Returns: positive if a > b, negative if a < b, 0 if equal
+ */
+function compareVersions(a: string, b: string): number {
+  const parsedA = parseVersion(a);
+  const parsedB = parseVersion(b);
+
+  if (!parsedA || !parsedB) return 0;
+
+  if (parsedA.major !== parsedB.major) return parsedA.major - parsedB.major;
+  if (parsedA.minor !== parsedB.minor) return parsedA.minor - parsedB.minor;
+  return parsedA.patch - parsedB.patch;
+}
+
+async function checkOllamaVersion(): Promise<CheckResult> {
+  const ollamaUrl = getOllamaUrl();
+  try {
+    const response = await fetch(`${ollamaUrl}/api/version`, {
+      signal: AbortSignal.timeout(5000)
+    });
+
+    if (!response.ok) {
+      return {
+        name: 'Ollama Version',
+        status: 'warning',
+        message: 'Could not determine version',
+        hint: 'Ollama may not be running. Try: loclaude docker-up'
+      };
+    }
+
+    const data = (await response.json()) as { version?: string };
+    const version = data.version;
+
+    if (!version) {
+      return {
+        name: 'Ollama Version',
+        status: 'warning',
+        message: 'Unknown version',
+        hint: 'Could not parse version from Ollama API'
+      };
+    }
+
+    const comparison = compareVersions(version, MIN_OLLAMA_VERSION);
+
+    if (comparison > 0) {
+      return {
+        name: 'Ollama Version',
+        status: 'ok',
+        message: 'Compatible',
+        version
+      };
+    } else if (comparison === 0) {
+      return {
+        name: 'Ollama Version',
+        status: 'ok',
+        message: 'Compatible',
+        version,
+        hint: `Version ${version} is the minimum. Consider upgrading for best compatibility.`
+      };
+    } else {
+      return {
+        name: 'Ollama Version',
+        status: 'error',
+        message: `Version too old (requires > ${MIN_OLLAMA_VERSION})`,
+        version,
+        hint: `Upgrade Ollama to a version greater than ${MIN_OLLAMA_VERSION}`
+      };
+    }
+  } catch (error) {
+    return {
+      name: 'Ollama Version',
+      status: 'warning',
+      message: 'Could not check version',
+      hint: `Cannot connect to ${ollamaUrl}. Start Ollama: loclaude docker-up`
+    };
+  }
+}
+
 function formatCheck(check: CheckResult): string {
   let line = statusLine(check.status, check.name, check.message, check.version);
 
@@ -191,7 +285,8 @@ export async function doctor(): Promise<void> {
     checkNvidiaSmi(),
     checkNvidiaContainerToolkit(),
     checkClaude(),
-    checkOllamaConnection()
+    checkOllamaConnection(),
+    checkOllamaVersion()
   ]);
 
   for (const check of checks) {
