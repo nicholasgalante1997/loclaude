@@ -292,12 +292,6 @@ Yes! Once you have models downloaded, you can run as many sessions as you want w
 
 No, but highly recommended. CPU-only mode works with smaller models at ~10-20 tokens/sec. A GPU (16GB+ VRAM) gives you 50-100 tokens/sec with larger, better models.
 
-### What's the catch?
-
-- Initial setup takes 5-10 minutes
-- Model downloads are large (4-20GB)
-- GPU hardware investment if you don't have one (~$500-1500 used)
-
 ### Can I use this with the Claude API too?
 
 Absolutely! Keep using Claude API for critical tasks, use loclaude for everything else to save money and avoid limits.
@@ -355,32 +349,6 @@ If inference is slow on CPU:
 1. Use smaller, quantized models: `qwen2.5-coder:7b`, `llama3.2:3b`
 2. Expect ~10-20 tokens/sec on modern CPUs
 3. Consider cloud models via Ollama: `glm-4.7:cloud`
-
-## Contributing
-
-loclaude is open source and welcomes contributions! Here's how you can help:
-
-### Share Your Experience
-
-- Star the repo if loclaude saves you money or rate limits
-- Share your setup and model recommendations
-- Write about your experience on dev.to, Twitter, or your blog
-- Report bugs and request features via GitHub Issues
-
-### Code Contributions
-
-- Fix bugs or add features (see open issues)
-- Improve documentation or examples
-- Add support for new model providers
-- Optimize model loading and performance
-
-### Spread the Word
-
-- Post on r/LocalLLaMA, r/selfhosted, r/ClaudeAI
-- Share in Discord/Slack dev communities
-- Help others troubleshoot in GitHub Discussions
-
-Every star, issue report, and shared experience helps more developers discover unlimited local Claude Code.
 
 ## Getting Help
 
