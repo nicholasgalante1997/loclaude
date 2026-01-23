@@ -27,7 +27,11 @@
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false
+    "noPropertyAccessFromIndexSignature": false,
+
+    "types": ["bun", "node"],
+    "typeRoots": ["node_modules/@types", "../../node_modules/@types"]
+
   },
   "include": ["lib"],
   "exclude": ["node_modules", "**/*.test.ts", "**/*.spec.ts"]

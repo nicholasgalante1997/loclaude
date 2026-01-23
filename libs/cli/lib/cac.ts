@@ -151,13 +151,20 @@ cli.command('models-run <name>', 'Run a model interactively').action(async (name
 // =============================================================================
 
 cli.help();
-cli.version('0.0.1-rc.1');
+cli.version('0.0.3');
 
 export const help = () => cli.outputHelp();
 export const version = () => cli.outputVersion();
 
 export const run_cli = (): void => {
-  cli.parse();
+      // Show help if no command provided (just "loclaude" with no args)
+    const args = process.argv.slice(2);
+    if (args.length === 0) {
+      help();
+      return;
+    }
+    cli.parse();
+  
 };
 
 export { cli };

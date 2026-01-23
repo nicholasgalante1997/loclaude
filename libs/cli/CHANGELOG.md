@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.3] - 2025-01-20
+
+### Changed
+
+- Running `loclaude` with no commands now prints the help message.
+
+## [0.0.2] - 2025-01-20
+
+### Added
+
+- Ollama Compatible Version Check to `doctor` command
+
+### Changed
+
+- Changes release tag from `alpha` to `latest`
+
 ## [0.0.1-alpha.2] - 2025-01-20
 
 ### Added

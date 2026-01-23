@@ -1,6 +1,6 @@
 {
   "name": "@loclaude-internal/cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "An internal @loclaude-internal package that supplies common CLI utilities.",
   "module": "dist/index.js",
   "type": "module",
@@ -59,18 +59,20 @@
     "build-types": "tsc -p tsconfig.json --emitDeclarationOnly",
     "bundle": "bun build.ts",
     "build": "run-p build-types bundle",
-    "postbuild": "npm pack",
     "test": "bun test",
     "test:watch": "bun test --watch",
     "prepublishOnly": "bun run build",
+    "prerelease": "run-s test build",
     "release": "bun run build && npm publish --access public",
     "release:rc": "bun run build && npm publish --tag rc --access public",
     "release:alpha": "bun run build && npm publish --tag alpha --access public",
-    "release:beta": "bun run build && npm publish --tag beta --access public"
+    "release:beta": "bun run build && npm publish --tag beta --access public",
+    "postrelease": "./scripts/tag.sh $(jq -r .version package.json)"
   },
   "devDependencies": {
     "@types/bun": "latest",
     "@types/bytes": "^3.1.5",
+    "@types/node": "^25.0.10",
     "npm-run-all": "^4.1.5"
   },
   "peerDependencies": {
