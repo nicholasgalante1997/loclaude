@@ -11,6 +11,8 @@ id_ed25519.pub
 *.pem
 *.key
 
+.env*
+
 # Logs
 logs/
 *.log

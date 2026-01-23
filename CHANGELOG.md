@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.5] - 2025-01-22
+
+### Added
+
+- Adds post-install.js ASCII art
+
+### Changed
+
+- Updates dependency on `@loclaude-internal/cli` from v0.0.3 to v0.0.4
+
 ## [0.0.4] - 2025-01-22
 
 ### Changed

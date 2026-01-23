@@ -1,6 +1,6 @@
 {
   "name": "loclaude",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Claude Code with local Ollama LLMs - Zero API costs, no rate limits, complete privacy",
   "type": "module",
   "license": "./LICENSE",
@@ -48,6 +48,7 @@
     "bin",
     "dist",
     "docker/docker-compose.yml",
+    "post-install.js",
     "README.md",
     "CHANGELOG.md",
     "LICENSE"
@@ -64,6 +65,7 @@
   },
   "packageManager": "bun@1.3.6",
   "scripts": {
+    "postinstall": "node post-install.js",
     "docs": "bunx serve ./docs",
     "lint": "eslint libs",
     "format": "prettier --write libs",
@@ -79,7 +81,7 @@
     "postrelease": "export LOCLAUDE_RELEASE_VERSION=\"$(jq -r .version package.json)\" && ./scripts/release-commit.sh $LOCLAUDE_RELEASE_VERSION && ./scripts/tag.sh $LOCLAUDE_RELEASE_VERSION"
   },
   "dependencies": {
-    "@loclaude-internal/cli": "^0.0.3"
+    "@loclaude-internal/cli": "^0.0.4"
   },
   "peerDependencies": {
     "typescript": "^5"
