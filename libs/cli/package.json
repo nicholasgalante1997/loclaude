@@ -1,6 +1,6 @@
 {
   "name": "@loclaude-internal/cli",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "An internal @loclaude-internal package that supplies common CLI utilities.",
   "module": "dist/index.js",
   "type": "module",
@@ -67,7 +67,7 @@
     "release:rc": "npm publish --tag rc --access public",
     "release:alpha": "npm publish --tag alpha --access public",
     "release:beta": "npm publish --tag beta --access public",
-    "postrelease": "./scripts/tag.sh $(jq -r .version package.json)"
+    "postrelease": "export LOCLAUDE_RELEASE_VERSION=\"$(jq -r .version package.json)\" && ./scripts/release-commit.sh $LOCLAUDE_RELEASE_VERSION && ./scripts/tag.sh $LOCLAUDE_RELEASE_VERSION"
   },
   "devDependencies": {
     "@types/bun": "latest",

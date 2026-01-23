@@ -151,7 +151,7 @@ cli.command('models-run <name>', 'Run a model interactively').action(async (name
 // =============================================================================
 
 cli.help();
-cli.version('0.0.3');
+cli.version('0.0.5');
 
 export const help = () => cli.outputHelp();
 export const version = () => cli.outputVersion();
