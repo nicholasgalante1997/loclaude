@@ -1,6 +1,6 @@
 {
   "name": "loclaude",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Claude Code with local Ollama LLMs - Zero API costs, no rate limits, complete privacy",
   "type": "module",
   "license": "./LICENSE",
@@ -41,15 +41,13 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/",
-    "tag": "alpha"
+    "tag": "latest"
   },
   "files": [
     ".claude/CLAUDE.md",
     "bin",
     "dist",
     "docker/docker-compose.yml",
-    "libs/cli/package.json",
-    "libs/cli/dist",
     "README.md",
     "CHANGELOG.md",
     "LICENSE"
@@ -73,13 +71,15 @@
     "test": "bun test libs/cli",
     "prerelease-check": "./scripts/prerelease-check.sh",
     "prepublishOnly": "bun run build",
-    "release": "bun run build && npm publish --access public",
-    "release:rc": "bun run build && npm publish --tag rc --access public",
-    "release:alpha": "bun run build && npm publish --tag alpha --access public",
-    "release:beta": "bun run build && npm publish --tag beta --access public"
+    "prerelease": "run-s test build prerelease-check",
+    "release": "npm publish --access public",
+    "release:rc": "npm publish --tag rc --access public",
+    "release:alpha": "npm publish --tag alpha --access public",
+    "release:beta": "npm publish --tag beta --access public",
+    "postrelease": "./scripts/tag.sh $(jq -r .version package.json)"
   },
   "dependencies": {
-    "@loclaude-internal/cli": "^0.0.2"
+    "@loclaude-internal/cli": "^0.0.3"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -97,6 +97,7 @@
     "eslint": "^9.39.2",
     "globals": "^17.0.0",
     "jiti": "^2.6.1",
+    "npm-run-all": "^4.1.5",
     "prettier": "^3.8.0",
     "turbo": "^2.7.5",
     "typescript-eslint": "^8.53.1"

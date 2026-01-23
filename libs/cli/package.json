@@ -63,10 +63,10 @@
     "test:watch": "bun test --watch",
     "prepublishOnly": "bun run build",
     "prerelease": "run-s test build",
-    "release": "bun run build && npm publish --access public",
-    "release:rc": "bun run build && npm publish --tag rc --access public",
-    "release:alpha": "bun run build && npm publish --tag alpha --access public",
-    "release:beta": "bun run build && npm publish --tag beta --access public",
+    "release": "npm publish --access public",
+    "release:rc": "npm publish --tag rc --access public",
+    "release:alpha": "npm publish --tag alpha --access public",
+    "release:beta": "npm publish --tag beta --access public",
     "postrelease": "./scripts/tag.sh $(jq -r .version package.json)"
   },
   "devDependencies": {

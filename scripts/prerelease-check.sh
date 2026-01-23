@@ -191,19 +191,13 @@ fi
 section "Docsite Check"
 # =============================================================================
 
-if [ -d "docsite" ]; then
+if [ -d "docs" ]; then
   pass "Docsite directory exists"
 
-  if [ -f "docsite/index.html" ]; then
-    pass "docsite/index.html exists"
+  if [ -f "docs/index.html" ]; then
+    pass "docs/index.html exists"
   else
-    fail "docsite/index.html missing"
-  fi
-
-  if [ -f "docsite/.nojekyll" ]; then
-    pass "docsite/.nojekyll exists (GitHub Pages)"
-  else
-    fail "docsite/.nojekyll missing"
+    fail "docs/index.html missing"
   fi
 else
   fail "Docsite directory missing"

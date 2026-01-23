@@ -2,6 +2,8 @@
 
 # loclaude
 
+Read the [docs](https://nicholasgalante1997.github.io/loclaude/#/)
+
 **Claude Code with Local LLMs**
 
 Stop burning through Claude API usage limits. Run Claude Code's powerful agentic workflow with local Ollama models on your own hardware.

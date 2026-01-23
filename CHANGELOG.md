@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.3] - 2025-01-22
+
+### Added
+
+- Added docs links to README.md
+
+### Changed
+
+- Removes `libs` from `package.json#files` array
+- Changes publish tag from `alpha` to `latest`
+- Running `loclaude` with no commands now prints the help message.
+
+## [0.0.2] - 2025-01-22
+
+### Changed
+
+- Adds Ollama Version check (>= 0.14.2) to `doctor` command
+- Pins to version v0.0.2 of `@loclaude-internal/cli`
+
 ## [0.0.1-alpha.3] - 2025-01-21
 
 ### Added
