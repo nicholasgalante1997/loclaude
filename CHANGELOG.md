@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.6] - 2025-02-18
+
+### Changed
+
+- Default docker volume directory changed from `{{cwd}}/models` to `$HOME/.loclaude/models` to allow for cross-workspace model caching
+
+### Added
+
+- Adds `models#path` configuration options to `.loclaude/config.json`
+- Adds support for setting `models#path` via environment variable `LOCLAUDE_MODELS_PATH`
+
 ## [0.0.5] - 2025-01-22
 
 ### Added
