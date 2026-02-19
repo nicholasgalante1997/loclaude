@@ -1,6 +1,6 @@
 {
   "name": "@loclaude-internal/cli",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "An internal @loclaude-internal package that supplies common CLI utilities.",
   "module": "dist/index.js",
   "type": "module",
