@@ -212,6 +212,9 @@ Example config:
     "url": "http://localhost:11434",
     "defaultModel": "qwen3-coder:30b"
   },
+  "models": {
+    "path": "./models"
+  },
   "docker": {
     "composeFile": "./docker-compose.yml",
     "gpu": true
@@ -230,6 +233,7 @@ Example config:
 | `OLLAMA_MODEL` | Default model name | `qwen3-coder:30b` |
 | `LOCLAUDE_COMPOSE_FILE` | Path to docker-compose.yml | `./docker-compose.yml` |
 | `LOCLAUDE_GPU` | Enable GPU (`true`/`false`) | `true` |
+| `LOCLAUDE_MODELS_PATH` | Path to ollama models docker volume | `$HOME/.loclaude/models` |
 
 ### Priority
 

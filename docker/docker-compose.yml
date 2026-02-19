@@ -80,7 +80,7 @@ services:
       #   - 13B model: ~8GB
       #   - 30B model: ~16GB
       #   - 70B model: ~40GB
-      - ./models:/root/.ollama
+      - ~/.loclaude/models:/root/.ollama
 
     ports:
       # Ollama API port - access at http://localhost:11434

@@ -24,6 +24,9 @@ Higher priority settings override lower ones.
     "url": "http://localhost:11434",
     "defaultModel": "qwen3-coder:30b"
   },
+  "models": {
+    "path": "/Users/username/.loclaude/models"
+  },
   "docker": {
     "composeFile": "./docker-compose.yml",
     "gpu": true
@@ -41,6 +44,7 @@ export OLLAMA_URL="http://localhost:11434"
 export OLLAMA_MODEL="qwen3-coder:30b"
 export LOCLAUDE_COMPOSE_FILE="./docker-compose.yml"
 export LOCLAUDE_GPU="true"
+export LOCLAUDE_MODELS_PATH="/Users/username/.loclaude/models"
 ```
 
 ## Configuration Sections
@@ -51,6 +55,12 @@ export LOCLAUDE_GPU="true"
 |---------|--------------|---------|-------------|
 | `ollama.url` | `OLLAMA_URL` | `http://localhost:11434` | Ollama API endpoint |
 | `ollama.defaultModel` | `OLLAMA_MODEL` | `qwen3-coder:30b` | Default model for `run` command |
+
+### Docker Models Volume Settings
+
+| Setting | Env Variable | Default | Description |
+|---------|--------------|---------|-------------|
+| `models.path` | `LOCLAUDE_MODELS_PATH` | `~/.loclaude/models` | Path to models volume |
 
 ### Docker Settings
 
@@ -80,6 +90,9 @@ Output:
   "ollama": {
     "url": "http://localhost:11434",
     "defaultModel": "qwen3-coder:30b"
+  },
+  "models": {
+    "path": "/Users/username/.loclaude/models"
   },
   "docker": {
     "composeFile": "./docker-compose.yml",

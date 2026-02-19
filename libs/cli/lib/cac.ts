@@ -56,7 +56,8 @@ cli
   .option('--no-webui', 'Skip Open WebUI in docker-compose')
   .option('--gpu', 'Force GPU mode (NVIDIA)')
   .option('--no-gpu', 'Force CPU-only mode')
-  .action(async (options: { force?: boolean; noWebui?: boolean; gpu?: boolean; noGpu?: boolean }) => {
+  .option('--local-models', 'Use per-project models directory instead of shared global')
+  .action(async (options: { force?: boolean; noWebui?: boolean; gpu?: boolean; noGpu?: boolean; localModels?: boolean }) => {
     await init(options);
   });
 

@@ -22,6 +22,10 @@ export interface OllamaConfig {
   defaultModel: string;
 }
 
+export interface ModelsConfig {
+  path: string;
+}
+
 export interface DockerConfig {
   composeFile: string;
   gpu: boolean;
@@ -33,6 +37,7 @@ export interface ClaudeConfig {
 
 export interface LoclaudeConfig {
   ollama: OllamaConfig;
+  models: ModelsConfig;
   docker: DockerConfig;
   claude: ClaudeConfig;
 }
@@ -40,6 +45,7 @@ export interface LoclaudeConfig {
 // Partial version for user configs (all fields optional)
 export interface LoclaudeConfigPartial {
   ollama?: Partial<OllamaConfig>;
+  models?: Partial<ModelsConfig>;
   docker?: Partial<DockerConfig>;
   claude?: Partial<ClaudeConfig>;
 }
@@ -52,6 +58,9 @@ const DEFAULT_CONFIG: LoclaudeConfig = {
   ollama: {
     url: 'http://localhost:11434',
     defaultModel: 'qwen3-coder:30b'
+  },
+  models: {
+    path: join(homedir(), '.loclaude', 'models')
   },
   docker: {
     composeFile: './docker-compose.yml',
@@ -158,6 +167,12 @@ function loadEnvConfig(): LoclaudeConfigPartial {
     config.docker.gpu = process.env.LOCLAUDE_GPU !== 'false' && process.env.LOCLAUDE_GPU !== '0';
   }
 
+  // Models config from env
+  if (process.env.LOCLAUDE_MODELS_PATH) {
+    config.models = config.models || {};
+    config.models.path = process.env.LOCLAUDE_MODELS_PATH;
+  }
+
   return config;
 }
 
@@ -202,6 +217,10 @@ function mergeWithDefaults(partial: LoclaudeConfigPartial): LoclaudeConfig {
     ollama: {
       ...DEFAULT_CONFIG.ollama,
       ...partial.ollama
+    },
+    models: {
+      ...DEFAULT_CONFIG.models,
+      ...partial.models
     },
     docker: {
       ...DEFAULT_CONFIG.docker,
@@ -305,4 +324,11 @@ export function isGpuEnabled(): boolean {
  */
 export function getClaudeExtraArgs(): string[] {
   return loadConfig().claude.extraArgs;
+}
+
+/**
+ * Get the models storage path from config
+ */
+export function getModelsPath(): string {
+  return loadConfig().models.path;
 }

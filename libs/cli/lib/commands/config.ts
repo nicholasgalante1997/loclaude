@@ -18,6 +18,11 @@ export async function configShow(): Promise<void> {
   labelValue('  Default Model', magenta(config.ollama.defaultModel));
   console.log('');
 
+   // Models settings
+  console.log(cyan('Models:'));
+  labelValue('  Path', config.models.path);
+  console.log('');
+
   // Docker settings
   console.log(cyan('Docker:'));
   labelValue('  Compose File', config.docker.composeFile);

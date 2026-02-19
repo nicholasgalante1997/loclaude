@@ -4,6 +4,8 @@
 
 import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
 import { join } from 'path';
+import { homedir } from 'os';
+
 import { header, success, warn, info, dim, cyan, green, url, cmd, file, successBox } from '../output';
 import { hasNvidiaGpu } from './doctor';
 
@@ -92,7 +94,7 @@ services:
       # ---------------------------------------------------------------------------
       # Model Storage
       # ---------------------------------------------------------------------------
-      # Maps ./models on your host to /root/.ollama in the container
+      # Maps ~/.loclaude/models on your host to /root/.ollama in the container
       # This persists downloaded models across container restarts
       #
       # Disk space requirements (approximate):
@@ -100,7 +102,7 @@ services:
       #   - 13B model: ~8GB
       #   - 30B model: ~16GB
       #   - 70B model: ~40GB
-      - ./models:/root/.ollama
+      - {{MODELS_PATH}}:/root/.ollama
 
     ports:
       # Ollama API port - access at http://localhost:11434
@@ -254,9 +256,9 @@ services:
       # ---------------------------------------------------------------------------
       # Model Storage
       # ---------------------------------------------------------------------------
-      # Maps ./models on your host to /root/.ollama in the container
+      # Maps ~/.loclaude/models on your host to /root/.ollama in the container
       # This persists downloaded models across container restarts
-      - ./models:/root/.ollama
+      - {{MODELS_PATH}}:/root/.ollama
 
     ports:
       # Ollama API port - access at http://localhost:11434
@@ -330,11 +332,14 @@ volumes:
 /**
  * Generate config template based on GPU mode
  */
-function getConfigTemplate(gpu: boolean): string {
+function getConfigTemplate(gpu: boolean, modelsPath: string): string {
   return `{
   "ollama": {
     "url": "http://localhost:11434",
     "defaultModel": "${gpu ? 'qwen3-coder:30b' : 'qwen2.5-coder:7b'}"
+  },
+  "models": {
+    "path": "${modelsPath}"
   },
   "docker": {
     "composeFile": "./docker-compose.yml",
@@ -345,8 +350,7 @@ function getConfigTemplate(gpu: boolean): string {
 }
 
 // .gitignore template for models directory
-const GITIGNORE_TEMPLATE = `# Ollama models (large binary files)
-# These are downloaded by Ollama and can be re-pulled anytime
+const GITIGNORE_TEMPLATE = `# Ollama models (if using local models with --local-models)
 models/
 `;
 
@@ -641,6 +645,7 @@ export interface InitOptions {
   noWebui?: boolean;
   gpu?: boolean;
   noGpu?: boolean;
+  localModels?: boolean;
 }
 
 export async function init(options: InitOptions = {}): Promise<void> {
@@ -648,7 +653,10 @@ export async function init(options: InitOptions = {}): Promise<void> {
   const composePath = join(cwd, 'docker-compose.yml');
   const configDir = join(cwd, '.loclaude');
   const configPath = join(configDir, 'config.json');
-  const modelsDir = join(cwd, 'models');
+  const globalModelsDir = join(homedir(), '.loclaude', 'models');
+  const localModelsDir = join(cwd, 'models');
+  const useLocalModels = options.localModels === true;
+  const modelsPath = useLocalModels ? './models' : globalModelsDir;
   const gitignorePath = join(cwd, '.gitignore');
   const miseTomlPath = join(cwd, 'mise.toml');
   const claudeDir = join(cwd, '.claude');
@@ -705,6 +713,8 @@ export async function init(options: InitOptions = {}): Promise<void> {
         .replace(/\nvolumes:\n  open-webui:\n.*$/m, '\n');
     }
 
+    // Replace the models path placeholder
+    composeContent = composeContent.replace(/\{\{MODELS_PATH\}\}/g, modelsPath);
     writeFileSync(composePath, composeContent);
     const modeLabel = gpuMode ? cyan('GPU') : cyan('CPU');
     console.log(success(`Created ${file('docker-compose.yml')} (${modeLabel} mode)`));
@@ -739,14 +749,23 @@ export async function init(options: InitOptions = {}): Promise<void> {
   if (existsSync(configPath) && !options.force) {
     console.log(warn(`${file('.loclaude/config.json')} already exists`));
   } else {
-    writeFileSync(configPath, getConfigTemplate(gpuMode));
+    writeFileSync(configPath, getConfigTemplate(gpuMode, modelsPath));
     console.log(success(`Created ${file('.loclaude/config.json')}`));
   }
 
   // Create models directory
-  if (!existsSync(modelsDir)) {
-    mkdirSync(modelsDir, { recursive: true });
-    console.log(success(`Created ${file('models/')} directory`));
+  if (useLocalModels) {
+    if (!existsSync(localModelsDir)) {
+      mkdirSync(localModelsDir, { recursive: true });
+      console.log(success(`Created ${file('models/')} directory (local)`));
+    }
+  } else {
+    if (!existsSync(globalModelsDir)) {
+      mkdirSync(globalModelsDir, { recursive: true });
+      console.log(success(`Created global models directory ${file(globalModelsDir)}`));
+    } else {
+      console.log(dim(`  Global models directory already exists: ${globalModelsDir}`));
+    }
   }
 
   // Append to .gitignore if it exists, or create it
